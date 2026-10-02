@@ -1,0 +1,14 @@
+**/build/
+*.keystore
+*.jks
+*.p12
+*.pem
+*.key
+*.idsig
+.env
+.env.*
+local.properties
+android/suicai.apk
+android/suicai-unsigned.apk
+android/*.log
+.DS_Store

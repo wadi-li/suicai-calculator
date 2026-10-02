@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Калькулятор Сюцай — матрица, совместимость, номера, календарь</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='2' width='28' height='28' rx='6' fill='%230f6b5c'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='10' cy='10' r='2.4'/%3E%3Ccircle cx='16' cy='16' r='2.4'/%3E%3Ccircle cx='22' cy='22' r='2.4'/%3E%3Ccircle cx='22' cy='10' r='1.4'/%3E%3Ccircle cx='10' cy='22' r='1.4'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+:root{
+  --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+  --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
+  --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+  --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.25rem;--s6:1.5rem;--s8:2rem;--s10:2.5rem;--s12:3rem;
+  --r:10px;--r-sm:6px;
+  --font:"Inter","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Mono",Consolas,"SFMono-Regular",Menlo,monospace;
+}
+[data-theme="light"]{
+  --bg:#f6f4ef;--surface:#fffdf9;--surface-2:#f0ede5;--border:#e0dbcf;--border-strong:#c9c2b2;
+  --text:#1f1d1a;--muted:#6b665c;--faint:#9a9486;
+  --accent:#0f6b5c;--accent-h:#0b5549;--accent-soft:#dcece7;
+  --good:#1f7a3f;--good-soft:#dff0e3;--bad:#b23a26;--bad-soft:#f7e1dc;--mid:#8a6a12;--mid-soft:#f4ecd4;
+  --shadow:0 1px 2px rgba(40,30,10,.06),0 4px 14px rgba(40,30,10,.05);
+}
+[data-theme="dark"]{
+  --bg:#141412;--surface:#1c1c19;--surface-2:#24241f;--border:#33322c;--border-strong:#48463d;
+  --text:#e9e6de;--muted:#a19c90;--faint:#76726a;
+  --accent:#4fb8a3;--accent-h:#6fcab7;--accent-soft:#1d3632;
+  --good:#6cc38a;--good-soft:#1c3324;--bad:#ea8a76;--bad-soft:#3d231d;--mid:#d9b458;--mid-soft:#39301a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:var(--text-base);line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--s5)}
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.top .wrap{display:flex;align-items:center;gap:var(--s4);min-height:60px}
+.brand{display:flex;align-items:center;gap:var(--s3);font-weight:700;font-size:var(--text-base);letter-spacing:-.01em}
+.brand svg{width:30px;height:30px;color:var(--accent)}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:var(--text-xs)}
+.spacer{flex:1}
+.icon-btn{border:1px solid var(--border);background:var(--surface);border-radius:999px;height:36px;padding:0 var(--s3);display:inline-flex;align-items:center;gap:var(--s2);cursor:pointer;font-size:var(--text-sm)}
+.icon-btn:hover{border-color:var(--border-strong)}
+nav.tabs{display:flex;gap:var(--s1);overflow-x:auto;padding:var(--s3) 0;scrollbar-width:thin}
+nav.tabs button{white-space:nowrap;border:1px solid transparent;background:none;padding:var(--s2) var(--s4);border-radius:999px;cursor:pointer;color:var(--muted);font-size:var(--text-sm);font-weight:500}
+nav.tabs button:hover{color:var(--text);background:var(--surface-2)}
+nav.tabs button[aria-selected="true"]{background:var(--accent);color:#fff}
+[data-theme="dark"] nav.tabs button[aria-selected="true"]{color:#0c1a17}
+main{padding:var(--s6) 0 var(--s12)}
+section.panel{display:none}
+section.panel.active{display:block}
+.android-download{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;padding:var(--s4);margin:var(--s5) 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
+.android-download p{margin:0;color:var(--muted);font-size:var(--text-sm)}
+.android-download a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none}
+.android-download a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+h1{font-size:var(--text-xl);line-height:1.15;margin:0 0 var(--s2);letter-spacing:-.02em}
+h2{font-size:var(--text-lg);margin:0 0 var(--s3);letter-spacing:-.01em}
+h3{font-size:var(--text-base);margin:0 0 var(--s2)}
+p{margin:0 0 var(--s3)}
+.lead{color:var(--muted);max-width:72ch;margin-bottom:var(--s6)}
+.grid{display:grid;gap:var(--s5)}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.side{grid-template-columns:minmax(280px,360px) minmax(0,1fr);align-items:start}
+@media (max-width:900px){.side,.g3,.g2{grid-template-columns:1fr}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:var(--s5);box-shadow:var(--shadow)}
+.card.flat{box-shadow:none}
+.field{display:flex;flex-direction:column;gap:var(--s1);margin-bottom:var(--s3)}
+.field label,.lbl{font-size:var(--text-xs);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:.55rem .7rem;min-height:40px}
+textarea{min-height:110px;font-family:var(--mono);font-size:var(--text-sm)}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.row{display:flex;gap:var(--s3);flex-wrap:wrap}
+.row>.field{flex:1;min-width:120px}
+.chk{display:flex;gap:var(--s2);align-items:flex-start;font-size:var(--text-sm);color:var(--muted);margin-bottom:var(--s2)}
+.chk input{margin-top:.3em}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:var(--r-sm);padding:.6rem 1rem;font-weight:600;cursor:pointer;font-size:var(--text-sm)}
+[data-theme="dark"] .btn{color:#0c1a17}
+.btn:hover{background:var(--accent-h)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border-strong)}
+.btn.ghost:hover{background:var(--surface-2)}
+.hint{font-size:var(--text-xs);color:var(--faint)}
+details.more{margin-top:var(--s3)}
+details.more summary{cursor:pointer;color:var(--muted);font-size:var(--text-sm)}
+.kpi{padding:var(--s4);border:1px solid var(--border);border-radius:var(--r);background:var(--surface)}
+.kpi .lbl{display:block;margin-bottom:var(--s1)}
+.kpi .val{font-size:var(--text-xl);font-weight:750;line-height:1;font-variant-numeric:tabular-nums;color:var(--accent)}
+.kpi .sub{font-size:var(--text-sm);color:var(--muted);margin-top:var(--s2)}
+.kpi .formula{font-family:var(--mono);font-size:var(--text-xs);color:var(--faint);margin-top:var(--s2);word-break:break-word}
+.matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:420px}
+.cell{aspect-ratio:1/0.82;border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s2);display:flex;flex-direction:column;justify-content:space-between;background:var(--surface-2);position:relative}
+.cell .d{font-family:var(--mono);font-size:var(--text-lg);font-weight:700;letter-spacing:.06em;color:var(--text);word-break:break-all;line-height:1.1}
+.cell .n{font-size:var(--text-xs);color:var(--muted);line-height:1.2}
+.cell .c{position:absolute;top:6px;right:8px;font-size:var(--text-xs);color:var(--faint);font-weight:600}
+.cell.empty{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 35%,transparent)}
+.cell.empty .d{color:var(--bad);opacity:.8}
+.cell.lvl1{background:var(--accent-soft)}
+.cell.lvl2{background:color-mix(in srgb,var(--accent) 22%,var(--surface))}
+.cell.lvl3{background:color-mix(in srgb,var(--accent) 34%,var(--surface))}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-xs);font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.b-good{background:var(--good-soft);color:var(--good)}
+.b-bad{background:var(--bad-soft);color:var(--bad)}
+.b-mid{background:var(--mid-soft);color:var(--mid)}
+.b-neu{background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
+.list{margin:0;padding-left:1.1rem}
+.list li{margin-bottom:var(--s1)}
+table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
+th,td{padding:.45rem .55rem;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;position:sticky;top:0;background:var(--surface)}
+td.num,th.num{text-align:center;font-variant-numeric:tabular-nums}
+.tbl-wrap{overflow:auto;max-height:560px;border:1px solid var(--border);border-radius:var(--r)}
+tr.we td:first-child{color:var(--bad)}
+.mono{font-family:var(--mono)}
+.cmp{display:grid;grid-template-columns:auto repeat(9,1fr);gap:3px;font-size:var(--text-xs)}
+.cmp div{padding:6px 2px;text-align:center;border-radius:4px;font-weight:600}
+.cmp .h{background:transparent;color:var(--muted)}
+.meter{height:10px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--border)}
+.meter i{display:block;height:100%;background:var(--accent)}
+.score-big{font-size:var(--text-xl);font-weight:750;font-variant-numeric:tabular-nums}
+.strip{display:flex;gap:2px;flex-wrap:wrap}
+.strip span{width:14px;height:22px;border-radius:3px;display:inline-block}
+.months{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--s3)}
+.month{border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--s3);background:var(--surface-2)}
+.month b{display:block;font-size:var(--text-sm)}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:var(--s3) var(--s4);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:var(--text-sm);margin:var(--s4) 0}
+.warn{border-left-color:var(--mid);background:var(--mid-soft)}
+.empty-state{color:var(--muted);font-size:var(--text-sm);padding:var(--s6);text-align:center;border:1px dashed var(--border-strong);border-radius:var(--r)}
+.pills{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.pill{font-family:var(--mono);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:4px 10px;font-size:var(--text-sm);cursor:pointer}
+.pill:hover{border-color:var(--accent)}
+.person{display:inline-flex;align-items:stretch;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface-2);overflow:hidden}
+.person button{background:transparent;border:0;cursor:pointer;padding:4px 10px;font-size:var(--text-sm)}
+.person button.del{border-left:1px solid var(--border);color:var(--muted);padding:4px 9px}
+.person button.del:hover{color:var(--bad);background:var(--bad-soft)}
+.person.cur{border-color:var(--accent)}
+.person:hover{border-color:var(--accent)}
+.saved{border-top:1px solid var(--border);padding-top:var(--s4);margin-top:var(--s4)}
+.heat{border-collapse:separate;border-spacing:3px}
+.heat td,.heat th{border:0;text-align:center;padding:6px 4px;border-radius:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.heat th{position:static;background:transparent;text-transform:none;letter-spacing:0;font-size:var(--text-xs)}
+.heat th.rowh{text-align:right}
+.heat td.self{background:var(--surface-2);color:var(--faint)}
+label.btn{display:inline-flex;align-items:center}
+input[readonly]{opacity:.75}
+.steps{font-family:var(--mono);font-size:var(--text-xs);color:var(--muted);background:var(--surface-2);border-radius:var(--r-sm);padding:var(--s3);white-space:pre-wrap;line-height:1.6}
+footer{border-top:1px solid var(--border);color:var(--faint);font-size:var(--text-xs);padding:var(--s5) 0}
+.mt{margin-top:var(--s5)}.mt2{margin-top:var(--s3)}
+.split{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);flex-wrap:wrap}
+@media print{header.top,nav.tabs,.no-print{display:none}section.panel{display:block}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" aria-label="Сюцай">
+        <rect x="2.5" y="2.5" width="27" height="27" rx="6" stroke="currentColor" stroke-width="2"/>
+        <circle cx="10" cy="22" r="2.6" fill="currentColor"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/><circle cx="22" cy="10" r="2.6" fill="currentColor"/>
+        <circle cx="10" cy="10" r="1.3" fill="currentColor"/><circle cx="22" cy="22" r="1.3" fill="currentColor"/>
+      </svg>
+      <div>Сюцай<small>цифровая психология · калькулятор</small></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="icon-btn" id="themeBtn" aria-label="Переключить тему">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span id="themeLbl">Тёмная</span>
+    </button>
+  </div>
+  <div class="wrap">
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="profile" aria-selected="true">Матрица судьбы</button>
+      <button role="tab" data-tab="pair">Совместимость</button>
+      <button role="tab" data-tab="phone">Телефон</button>
+      <button role="tab" data-tab="pin">PIN-код</button>
+      <button role="tab" data-tab="days">Дни для дел и отдыха</button>
+      <button role="tab" data-tab="travel">Путешествия</button>
+      <button role="tab" data-tab="method">Методика</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<aside class="android-download no-print" aria-label="Приложение для Android">
+  <div><strong>Сюцай на Android</strong><p>Версия 1.3 · Android 7.0+ · APK, 81 КБ<br>Работает без интернета и сохраняет данные на устройстве.</p></div>
+  <a class="btn" id="downloadApk" href="./Suicai-1.3.apk" download="Suicai-1.3.apk" type="application/vnd.android.package-archive">Скачать для Android</a>
+</aside>
+
+<!-- ============ PROFILE ============ -->
+<section class="panel active" id="tab-profile">
+  <h1>Матрица судьбы</h1>
+  <p class="lead">Введите дату и время рождения. Профиль сохраняется в браузере и используется во всех остальных разделах: совместимости, подборе телефона и PIN-кода, календаре.</p>
+  <div class="grid side">
+    <div class="card">
+      <div class="field"><label for="pName">Имя (необязательно)</label><input type="text" id="pName" placeholder="Например, Алексей"></div>
+      <div class="row">
+        <div class="field"><label for="pDate">Дата рождения</label><input type="date" id="pDate" value="1985-07-16"></div>
+        <div class="field"><label for="pTime">Время</label><input type="time" id="pTime" value="08:30"></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="pNoTime"> Время рождения неизвестно</label>
+      <div class="field"><label for="pCity">Место рождения (для часа рождения)</label>
+        <select id="pCity"></select></div>
+      <div class="row">
+        <div class="field"><label for="pLat">Широта</label><input type="number" id="pLat" step="0.01"></div>
+        <div class="field"><label for="pLon">Долгота</label><input type="number" id="pLon" step="0.01"></div>
+        <div class="field"><label for="pTz">UTC±, ч</label><input type="number" id="pTz" step="0.5"></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="pAutoTz" checked> Определять UTC автоматически по часовому поясу — с учётом исторического летнего и декретного времени</label>
+      <div class="field"><label for="pZone">Часовой пояс</label><select id="pZone"></select></div>
+      <button class="btn ghost" id="tzBtn" type="button">Определить часовой пояс по городу и дате</button>
+      <p class="hint" id="tzHint" aria-live="polite"></p>
+      <details class="more"><summary>Состав матрицы</summary>
+        <div class="mt2">
+          <div class="field"><label for="optCS">Число сознания в матрице</label>
+            <select id="optCS"><option value="always">Добавлять всегда</option><option value="two">Только если день двузначный</option><option value="never">Не добавлять</option></select></div>
+          <label class="chk"><input type="checkbox" id="optMS" checked> Добавлять число миссии</label>
+          <label class="chk"><input type="checkbox" id="optTime"> Добавлять цифры времени рождения (расширенная матрица)</label>
+        </div>
+      </details>
+      <div class="row mt2"><button class="btn" id="calcBtn">Рассчитать</button><button class="btn ghost" id="printBtn">Печать</button></div>
+      <div class="saved no-print">
+        <h3>Сохранённые профили</h3>
+        <p class="hint">Семья, партнёры, коллеги — для быстрого переключения, сравнения пар и группы.</p>
+        <div id="savedList" class="pills"></div>
+        <div class="row mt2"><button class="btn ghost" id="saveProfBtn">Сохранить текущий</button><button class="btn ghost" id="expProfBtn">Экспорт JSON</button><label class="btn ghost" for="impProf">Импорт JSON</label><input type="file" id="impProf" accept=".json,application/json" hidden></div>
+      </div>
+      <div class="saved no-print">
+        <h3>Все введённые данные</h3>
+        <p class="hint" id="autosaveHint">Введённые данные сохраняются автоматически на этом устройстве. Резервная копия переносит всё сразу: форму, профили, настройки вкладок и тему.</p>
+        <div class="row mt2"><button class="btn ghost" id="backupBtn">Сохранить копию данных</button><label class="btn ghost" for="impAll">Загрузить копию</label><input type="file" id="impAll" accept=".json,application/json" hidden></div>
+      </div>
+    </div>
+    <div id="profileOut"></div>
+  </div>
+</section>
+
+<!-- ============ PAIR ============ -->
+<section class="panel" id="tab-pair">
+  <h1>Совместимость пары</h1>
+  <p class="lead">Список подходящих партнёров и антагонистов строится по числу сознания на основе дружбы планет-покровителей. Для конкретной пары учитываются числа сознания, миссии и взаимное дополнение матриц.</p>
+  <div id="partnersOut"></div>
+  <div class="grid side mt">
+    <div class="card">
+      <h2>Проверить пару</h2>
+      <div class="field"><label for="bSaved">Из сохранённых профилей</label><select id="bSaved"><option value="">— ввести вручную —</option></select></div>
+      <div class="field"><label for="bName">Имя партнёра</label><input type="text" id="bName" placeholder="Партнёр"></div>
+      <div class="field"><label for="bDate">Дата рождения партнёра</label><input type="date" id="bDate" value="1988-03-22"></div>
+      <div class="field"><label for="pairType">Тип отношений</label>
+        <select id="pairType"><option value="love">Любовь, брак</option><option value="biz">Бизнес, партнёрство</option><option value="friend">Дружба</option></select></div>
+      <button class="btn" id="pairBtn">Сравнить</button>
+    </div>
+    <div id="pairOut"><div class="empty-state">Введите дату рождения партнёра и нажмите «Сравнить».</div></div>
+  </div>
+  <div class="card mt">
+    <div class="split"><h2>Совместимость группы</h2>
+      <div class="row"><select id="grpType" aria-label="Тип отношений в группе" style="width:auto"><option value="love">Любовь, брак</option><option value="biz" selected>Бизнес, команда</option><option value="friend">Дружба, семья</option></select><button class="btn ghost" id="grpCsvBtn">Экспорт CSV</button></div></div>
+    <p class="hint">Текущий профиль и все сохранённые: попарная оценка по той же формуле, что и для пары. Чем зеленее ячейка, тем легче взаимодействие.</p>
+    <div id="groupOut" class="mt2"></div>
+  </div>
+  <div class="card mt flat">
+    <h2>Таблица отношений чисел 1–9</h2>
+    <p class="hint">Строка — как число строки относится к числу столбца (дружба планет несимметрична). Итог пары — сочетание двух направлений.</p>
+    <div id="relTable"></div>
+  </div>
+</section>
+
+<!-- ============ PHONE ============ -->
+<section class="panel" id="tab-phone">
+  <h1>Благоприятный номер телефона</h1>
+  <p class="lead">Проверка номера, сравнение списка предложенных номеров от оператора и подбор окончания под ваш профиль.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Проверить номер</h2>
+      <div class="field"><label for="phOne">Номер</label><input type="text" id="phOne" placeholder="+7 916 123-45-67"></div>
+      <label class="chk"><input type="checkbox" id="phNoCC" checked> Не учитывать код страны (+7, +31 и т. п.)</label>
+      <button class="btn" id="phCheckBtn">Проверить</button>
+      <div id="phOneOut" class="mt2"></div>
+    </div>
+    <div class="card">
+      <h2>Подобрать окончание</h2>
+      <div class="row">
+        <div class="field"><label for="phPrefix">Фиксированная часть</label><input type="text" id="phPrefix" value="+7 916"></div>
+        <div class="field"><label for="phLen">Всего цифр</label><input type="number" id="phLen" value="11" min="5" max="15"></div>
+      </div>
+      <p class="hint">Например, +7 916 и 11 цифр — будут подобраны 7 последних цифр.</p>
+      <button class="btn" id="phGenBtn">Подобрать</button>
+      <div id="phGenOut" class="mt2"></div>
+    </div>
+  </div>
+  <div class="card mt">
+    <div class="split"><h2>Сравнить список номеров</h2><button class="btn ghost" id="phCsvBtn">Экспорт CSV</button></div>
+    <div class="field"><label for="phList">По одному номеру в строке</label><textarea id="phList" placeholder="+7 916 111-22-33&#10;+7 916 845-90-12&#10;+31 6 1234 5678"></textarea></div>
+    <button class="btn" id="phListBtn">Сравнить</button>
+    <div id="phListOut" class="mt2"></div>
+  </div>
+</section>
+
+<!-- ============ PIN ============ -->
+<section class="panel" id="tab-pin">
+  <h1>Благоприятный PIN-код</h1>
+  <p class="lead">Финансовый код Сюцай и подбор альтернативных PIN-кодов с той же энергией, но без прямой связи с датой рождения.</p>
+  <div class="grid g2">
+    <div class="card" id="pinMain"></div>
+    <div class="card">
+      <h2>Проверить PIN</h2>
+      <div class="field"><label for="pinIn">PIN (4–6 цифр)</label><input type="text" id="pinIn" inputmode="numeric" maxlength="6" placeholder="0000"></div>
+      <button class="btn" id="pinCheckBtn">Проверить</button>
+      <div id="pinCheckOut" class="mt2"></div>
+    </div>
+  </div>
+  <div class="card mt">
+    <div class="split"><h2>Альтернативные PIN-коды</h2><button class="btn ghost" id="pinGenBtn">Другие варианты</button></div>
+    <p class="hint">Отобраны коды с итоговым числом, совпадающим с числом сознания или дружественным ему, без запрещённых цифр-антагонистов, без повторов и последовательностей, не совпадающие с ДДММ, ММДД, годом рождения и финансовым кодом.</p>
+    <div id="pinGenOut" class="pills mt2"></div>
+  </div>
+</section>
+
+<!-- ============ DAYS ============ -->
+<section class="panel" id="tab-days">
+  <h1>Дни для дел и для отдыха</h1>
+  <p class="lead">Личный день рассчитывается по формуле Сюцай: личный год → личный месяц → личный день. Дополнительно учитываются общий день (по всей дате) и планета дня недели относительно вашего числа сознания.</p>
+  <div class="card">
+    <div class="row">
+      <div class="field"><label for="dStart">С даты</label><input type="date" id="dStart"></div>
+      <div class="field"><label for="dCount">Дней</label><input type="number" id="dCount" value="60" min="7" max="400"></div>
+      <div class="field"><label for="dFilter">Показать</label>
+        <select id="dFilter"><option value="all">Все дни</option><option value="biz">Благоприятные для дел</option><option value="rest">Благоприятные для отдыха</option><option value="bad">Неблагоприятные для дел</option></select></div>
+    </div>
+    <div class="row"><button class="btn" id="dBtn">Построить</button><button class="btn ghost" id="dCsvBtn">Экспорт CSV</button><button class="btn ghost" id="dIcsBtn">В календарь (.ics)</button></div>
+    <p class="hint">Файл .ics открывается в Google Календаре, Outlook, Apple Календаре: выгружаются дни с выраженной оценкой (с учётом фильтра) как события на весь день.</p>
+  </div>
+  <div id="daysSummary" class="grid g3 mt"></div>
+  <div class="card mt"><h2>Личный день: значения</h2><div id="pdLegend"></div></div>
+  <div class="mt tbl-wrap" id="daysTable"></div>
+</section>
+
+<!-- ============ TRAVEL ============ -->
+<section class="panel" id="tab-travel">
+  <h1>Периоды для путешествий</h1>
+  <p class="lead">Оценка каждого дня для поездок, объединение в благоприятные и неблагоприятные периоды, обзор по месяцам и проверка конкретной поездки.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Горизонт планирования</h2>
+      <div class="row">
+        <div class="field"><label for="tStart">С даты</label><input type="date" id="tStart"></div>
+        <div class="field"><label for="tMonths">Месяцев</label><input type="number" id="tMonths" value="12" min="1" max="24"></div>
+      </div>
+      <div class="row"><button class="btn" id="tBtn">Рассчитать периоды</button><button class="btn ghost" id="tIcsBtn">Периоды в календарь (.ics)</button></div>
+    </div>
+    <div class="card">
+      <h2>Проверить поездку</h2>
+      <div class="row">
+        <div class="field"><label for="tDep">Отъезд</label><input type="date" id="tDep"></div>
+        <div class="field"><label for="tRet">Возвращение</label><input type="date" id="tRet"></div>
+      </div>
+      <button class="btn" id="tripBtn">Проверить</button>
+      <div id="tripOut" class="mt2"></div>
+    </div>
+  </div>
+  <div class="card mt"><h2>По месяцам</h2><div id="tMonthsOut" class="months"></div></div>
+  <div class="grid g2 mt">
+    <div class="card"><h2>Благоприятные периоды</h2><div id="tGood"></div></div>
+    <div class="card"><h2>Неблагоприятные периоды</h2><div id="tBad"></div></div>
+  </div>
+</section>
+
+<!-- ============ METHOD ============ -->
+<section class="panel" id="tab-method">
+  <h1>Методика расчётов</h1>
+  <p class="lead">Сюцай — система «цифровой психологии», связанная с именем Жаната Кожамжарова; опирается на ведическую нумерологию (числа 1–9 соответствуют планетам). Научных подтверждений у неё нет — используйте результаты как инструмент для размышления, а не как прогноз.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Канонические расчёты</h2>
+      <ul class="list">
+        <li><b>Сведение числа</b> — сумма цифр, пока не останется 1–9. Мастер-чисел в Сюцай нет.</li>
+        <li><b>Число сознания (ЧС)</b> — сумма цифр дня рождения. 29 → 11 → 2.</li>
+        <li><b>Число миссии (предназначения, ЧМ)</b> — сумма всех цифр полной даты. 29.01.2001 → 15 → 6.</li>
+        <li><b>Матрица</b> — все ненулевые цифры даты + ЧС + ЧМ, ноль энергией не считается. Сетка 3×3: верх 3·6·9, середина 2·5·8, низ 1·4·7.</li>
+        <li><b>Линия бесконечных денег</b> — 1·4·7.</li>
+        <li><b>Бизнес-цепочка</b> — 4 (цели) → 5 (коммуникация) → 8 (труд) → 7 (успех): семёрка «работает» при активных 4, 5 и 8.</li>
+        <li><b>Программа доминирующего эго</b> — одновременно заполнены 1 и 9, особенно с повторами.</li>
+        <li><b>Финансовый код</b> — [день→1 цифра][месяц→1 цифра][год→1 цифра][сумма трёх→1 цифра]. 31.05.2001 → 4·5·3·3.</li>
+        <li><b>Личный год</b> = день + месяц рождения + текущий год (свести); <b>личный месяц</b> = ЛГ + номер месяца; <b>личный день</b> = ЛМ + число.</li>
+        <li><b>Общий день</b> — сумма всех цифр календарной даты.</li>
+        <li><b>Планеты</b>: 1 Солнце, 2 Луна, 3 Юпитер, 4 Раху, 5 Меркурий, 6 Венера, 7 Кету, 8 Сатурн, 9 Марс. ЧС сильнее до ~33 лет, затем выходит миссия.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Реконструкции (открытые правила)</h2>
+      <p class="hint">В открытых источниках Сюцай единых таблиц для этих расчётов нет — применены правила ведической нумерологии, на которую опирается система. Все веса приведены явно.</p>
+      <ul class="list">
+        <li><b>Число характера</b> — планета-управитель часа рождения (хора). Сутки делятся на 12 дневных и 12 ночных «часов» от восхода до заката и от заката до восхода; первый дневной час — управитель дня недели, дальше халдейский порядок: Сатурн → Юпитер → Марс → Солнце → Венера → Меркурий → Луна. Восход/закат рассчитываются по координатам. Раху (4) и Кету (7) часами не управляют.</li>
+        <li><b>Совместимость</b> — естественная дружба планет (Парашара) с узлами Раху/Кету. Друг = +1, нейтрал = 0, враг = −1, одинаковые числа = +0,5 (резонанс). Пара = среднее двух направлений. Итог пары: ЧС 45 %, ЧМ 25 %, перекрёстно ЧС↔ЧМ 15 %, дополнение матриц 15 %.</li>
+        <li><b>Часовой пояс</b> — смещение UTC на дату и время рождения берётся из встроенной в браузер базы часовых поясов IANA (tzdata): учитываются летнее время, декретное время и исторические переходы (например, Москва летом 1981–2010 — UTC+4, 2011–2014 — UTC+4 круглый год).</li>
+        <li><b>Совместимость группы</b> — для каждой пары участников та же формула, что и для пары; средняя оценка участника показывает, насколько легко ему в этой группе.</li>
+        <li><b>Телефон</b> — итоговое число номера сравнивается с ЧС (±25) и ЧМ (±10); +3 за каждую недостающую в матрице цифру (до 12), +10 за финансовый код, штраф до −20 за долю цифр-антагонистов ЧС.</li>
+        <li><b>Дни</b>: базовый вес личного дня для дел 1:+2, 2:+1, 3:+2, 4:−1, 5:+2, 6:0, 7:−2, 8:+2, 9:−1; для отдыха 1:−1, 2:+1, 3:0, 4:0, 5:+1, 6:+2, 7:+2, 8:−1, 9:+1; для поездок 1:+1, 2:0, 3:+2, 4:−2, 5:+2, 6:+1, 7:−2, 8:−1, 9:+1. Плюс отношение ЧС к общему дню (±1) и к планете дня недели (±0,5); для поездок ещё личный месяц 3/5 (+0,5) и 4/7 (−0,5). Итог ≥ 2,5 — благоприятно, ≤ −1 — неблагоприятно.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card mt flat">
+    <h2>Источники</h2>
+    <ul class="list">
+      <li><a href="https://horo.mail.ru/article/9040-chto-takoe-syutsaj/" target="_blank" rel="noopener">Гороскопы Mail.ru — число сознания, миссии, матрица, бизнес-цепочка 4-5-8-7</a></li>
+      <li><a href="https://numeria.ru/calculators/syutsay/" target="_blank" rel="noopener">Numeria — состав матрицы (цифры + ЧС + ЧМ), линия 1-4-7, личный год/месяц/день</a></li>
+      <li><a href="https://findh.org/5155-suitsai.html" target="_blank" rel="noopener">Findh — расположение энергий в сетке, финансовый код</a></li>
+      <li><a href="https://t-j.ru/cifrovaya-psihologiya/" target="_blank" rel="noopener">Т—Ж — значения миссий, программа доминирующего эго, критика метода</a></li>
+      <li><a href="https://sutcai.ru/chislo-soznaniya/" target="_blank" rel="noopener">Sutcai.ru — соответствие чисел планетам</a></li>
+    </ul>
+  </div>
+</section>
+</main>
+<footer><div class="wrap">Автономный инструмент: работает без интернета, данные хранятся только в этом браузере. Результаты не являются научным прогнозом.</div></footer>
+
+<script>
+const MEM=(()=>{const m={};return{getItem:k=>k in m?m[k]:null,setItem:(k,v)=>{m[k]=String(v)}}})();
+"use strict";
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dsum=s=>String(s).replace(/\D/g,'').split('').reduce((a,c)=>a+ +c,0);
+function red(n){n=Math.abs(n|0);while(n>9)n=dsum(n);return n;}
+function redSteps(n){const a=[n];while(n>9){n=dsum(n);a.push(n);}return a.join(' → ');}
+const pad=n=>String(n).padStart(2,'0');
+const WD=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const MONTHS=['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
+const fmtD=d=>`${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}`;
+const isoD=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+function parseISO(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12);}
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+
+/* ================= knowledge base ================= */
+const PLANET={1:'Солнце',2:'Луна',3:'Юпитер',4:'Раху',5:'Меркурий',6:'Венера',7:'Кету',8:'Сатурн',9:'Марс'};
+const PLANET_DAY={1:'воскресенье',2:'понедельник',3:'четверг',4:'суббота',5:'среда',6:'пятница',7:'вторник',8:'суббота',9:'вторник'};
+const WD_PLANET=[1,2,9,5,3,6,8]; // Вс..Сб
+const ENERGY={
+ 1:{t:'Власть',k:'воля, лидерство, решения',plus:'Лидерство, решительность, ответственность',minus:'Эгоизм, давление, нетерпимость к чужому темпу',dev:'Принимать самостоятельные решения, брать ответственность за результат, доводить начатое до конца.'},
+ 2:{t:'Творческая психология',k:'эмпатия, дипломатия, отношения',plus:'Тактичность, умение чувствовать людей, дипломатия',minus:'Сомнения, зависимость от чужого мнения',dev:'Учиться слушать, договариваться, строить партнёрства и заботиться о близких.'},
+ 3:{t:'Анализ',k:'логика, знание, наставничество',plus:'Системность, аналитика, умение учить',minus:'Категоричность, лень, холодный расчёт',dev:'Регулярно учиться, планировать, считать, передавать знания другим.'},
+ 4:{t:'Цели и тайные знания',k:'постановка целей, креатив, справедливость',plus:'Новаторство, творческий подход, честность',minus:'Недовольство, разрушение, апатия',dev:'Записывать цели и сроки, выбирать честные задачи, давать выход креативу.'},
+ 5:{t:'Коммуникация и борьба',k:'общение, связи, деловая хватка',plus:'Коммуникабельность, удача, торговля',minus:'Непостоянство, конфликтность, легкомыслие',dev:'Расширять круг общения, выступать, вести переговоры без борьбы — уметь соглашаться.'},
+ 6:{t:'Творчество',k:'созидание, красота, любовь, комфорт',plus:'Вкус, мудрость, удачливость в любви',minus:'Уход в комфорт, мстительность, нарушение правил',dev:'Создавать что-то своими руками, наводить красоту вокруг, отдыхать без чувства вины.'},
+ 7:{t:'Йога и успех',k:'кризис-менеджмент, дисциплина, признание',plus:'Антикризисное мышление, интуиция, быстрая реализация идей',minus:'Рассеянность, беспорядок в мыслях и делах',dev:'Режим дня, практики (йога, медитация, спорт), порядок в делах; успех раскрывается при активных 4, 5, 8.'},
+ 8:{t:'Упорный труд',k:'дисциплина, контроль, структура',plus:'Работоспособность, внимание к деталям, прагматизм',minus:'Гиперконтроль, недоверие, трудоголизм',dev:'Системный ежедневный труд, чек-листы, привычка завершать и структурировать процессы.'},
+ 9:{t:'Служение людям',k:'энергия, идея, помощь',plus:'Энергия, боевой дух, забота о людях',minus:'Вспыльчивость, мнительность, наивность',dev:'Помогать без ожидания отдачи, спорт, волонтёрство, работа ради идеи.'}
+};
+const CS_TXT={
+ 1:'Лидер, вектор эго — на управление и первенство. Реализуется как руководитель или автономно. Минус — категоричность и эгоизм.',
+ 2:'Дипломат и эмпат, тонко чувствует людей, сильнее в паре. Реализуется через отношения. Минус — сомнения и перфекционизм.',
+ 3:'«Гуру»-аналитик, ориентирован на успех и знание, хороший преподаватель. Минус — категоричность, склонность к бездействию.',
+ 4:'Новатор и борец за справедливость, мыслит нестандартно, реализуется через креатив. Минус — хроническое недовольство, разрушение.',
+ 5:'Коммуникатор с деловой хваткой и везением, силён в торговле и связях. Минус — непостоянство и импульсивность.',
+ 6:'Творец с острым умом, даёт мудрые советы, удачлив в любви. Минус — склонность обходить правила, мстительность.',
+ 7:'Антикризисный человек: быстро воплощает идеи, сильная интуиция. Минус — рассеянность, беспорядок в делах.',
+ 8:'Прагматик и контролёр, внимателен к деталям, трудолюбив. Минус — подозрительность, гиперконтроль.',
+ 9:'Энергичный боец со спортивным духом, движется вперёд ради идеи. Минус — вспыльчивость и мнительность.'
+};
+const MS_TXT={
+ 1:'Власть. Лидерство и управление, реализация через карьеру и ответственность.',
+ 2:'Творчество и психология. Дипломатия, понимание людей, работа с эмоциями.',
+ 3:'Анализ. Логика, систематизация, выгода через расчёт, наставничество.',
+ 4:'Передача тайного знания. Поиск нового, трансформация; невозможна без честности.',
+ 5:'Борьба. Воин духа; задача — научиться «холодной» коммуникации и соглашаться.',
+ 6:'Творчество. Создатель нового; важно не променять самореализацию на комфорт.',
+ 7:'Йога. Преодоление кризисов, дисциплина и организованность; «всё или ничего».',
+ 8:'Упорный труд. Самоотверженная работа; нужна дипломатия, а не жёсткий контроль.',
+ 9:'Служение людям. Забота и поддержка; самая благородная и ответственная миссия.'
+};
+const CHAR_TXT={
+ 1:'Солнце: прямота, гордость, стремление к признанию и самостоятельности.',
+ 2:'Луна: восприимчивость, смена настроений, забота, сильная интуиция.',
+ 3:'Юпитер: рассудительность, щедрость, склонность наставлять и планировать.',
+ 5:'Меркурий: подвижность ума, любопытство, коммуникабельность, гибкость.',
+ 6:'Венера: мягкость, эстетизм, любовь к комфорту и гармонии в отношениях.',
+ 8:'Сатурн: сдержанность, терпение, серьёзность, основательность.',
+ 9:'Марс: решительность, соревновательность, быстрая реакция, прямота.'
+};
+const PD_TXT={
+ 1:{t:'Начало',d:'Запуск проектов, важные решения, обращение к руководству и в госорганы.',a:'Уступать инициативу, откладывать решения.'},
+ 2:{t:'Партнёрство',d:'Переговоры о сотрудничестве, примирение, семья, совместные дела.',a:'Конфликты и жёсткое давление.'},
+ 3:{t:'Анализ',d:'Планирование, обучение, расчёты, консультации, проверка договоров.',a:'Импульсивные покупки и решения «на эмоциях».'},
+ 4:{t:'Цели и перемены',d:'Постановка целей, творческие идеи, трансформация.',a:'Крупные старты и подписание без двойной проверки: день неожиданностей.'},
+ 5:{t:'Коммуникация',d:'Встречи, продажи, реклама, публичность, короткие поездки.',a:'Споры и борьба — энергия уходит.'},
+ 6:{t:'Творчество и отдых',d:'Отдых, красота, покупки для дома, свидания, искусство.',a:'Тяжёлая рутина и жёсткие переговоры.'},
+ 7:{t:'Кризис и практики',d:'Уединение, йога, здоровье, разбор ошибок, отдых.',a:'Новые начинания, риск, дальняя дорога без запаса времени.'},
+ 8:{t:'Труд',d:'Работа, финансы, документы, наведение порядка, дисциплина.',a:'Праздность, лишние траты.'},
+ 9:{t:'Завершение и идеи',d:'Завершать дела, помогать, спорт, генерировать идеи.',a:'Долгосрочные старты, вспыльчивость.'}
+};
+const PY_TXT={1:'год начинаний',2:'год партнёрства',3:'год анализа и обучения',4:'год целей и перемен',5:'год коммуникаций и движения',6:'год творчества и семьи',7:'год испытаний и практик',8:'год труда и денег',9:'год завершения и идей'};
+
+/* Natural planetary friendship (Parashara) incl. Rahu(4) & Ketu(7). REL[a][b] = attitude of a toward b */
+const FR={1:[2,3,9],2:[1,5],3:[1,2,9],4:[5,6,8],5:[1,6,4],6:[5,8,4,7],7:[9,6,8],8:[5,6,4,7],9:[1,2,3,7]};
+const EN={1:[6,8,4,7],2:[4,7],3:[5,6],4:[1,2,9],5:[2],6:[1,2],7:[1,2],8:[1,2,9],9:[5,4]};
+function rel(a,b){if(a===b)return'S';if(FR[a].includes(b))return'F';if(EN[a].includes(b))return'E';return'N';}
+const RV={S:.5,F:1,N:0,E:-1};
+const RNAME={S:'резонанс',F:'друг',N:'нейтрально',E:'враг'};
+function pairClass(a,b){
+  if(a===b)return{k:'S',t:'Резонанс',c:'b-mid',g:'ok'};
+  const x=rel(a,b),y=rel(b,a),s=[x,y].sort().join('');
+  switch(s){
+    case'FF':return{k:s,t:'Гармония',c:'b-good',g:'good'};
+    case'FN':return{k:s,t:'Благоприятно',c:'b-good',g:'good'};
+    case'NN':return{k:s,t:'Нейтрально',c:'b-neu',g:'ok'};
+    case'EF':return{k:s,t:'Односторонняя связь',c:'b-mid',g:'hard'};
+    case'EN':return{k:s,t:'Напряжение',c:'b-bad',g:'hard'};
+    case'EE':return{k:s,t:'Антагонисты',c:'b-bad',g:'anti'};
+  }
+}
+const pairVal=(a,b)=>(RV[rel(a,b)]+RV[rel(b,a)])/2;
+const daysOf=n=>[n,n+9,n+18,n+27].filter(x=>x<=31);
+
+/* ================= astronomy: sunrise / sunset ================= */
+function sunTimes(y,m,d,lat,lon,tz){
+  const rad=Math.PI/180;
+  const JD=Date.UTC(y,m-1,d,12)/86400000+2440587.5;
+  const n=Math.ceil(JD-2451545.0+0.0008);
+  const Js=n-lon/360;
+  const M=(357.5291+0.98560028*Js)%360;
+  const C=1.9148*Math.sin(M*rad)+0.02*Math.sin(2*M*rad)+0.0003*Math.sin(3*M*rad);
+  const L=(M+C+180+102.9372)%360;
+  const Jt=2451545+Js+0.0053*Math.sin(M*rad)-0.0069*Math.sin(2*L*rad);
+  const sd=Math.sin(L*rad)*Math.sin(23.4397*rad), cd=Math.cos(Math.asin(sd));
+  const cw=(Math.sin(-0.833*rad)-Math.sin(lat*rad)*sd)/(Math.cos(lat*rad)*cd);
+  if(cw>1||cw<-1)return{sr:6,ss:18,polar:true};
+  const w=Math.acos(cw)/rad;
+  const toLocal=J=>{let h=((J-2440587.5)*86400000/3600000+tz)%24;h=(h+24)%24;return h;};
+  // noon-anchored: sunrise before noon, sunset after
+  let sr=toLocal(Jt-w/360), ss=toLocal(Jt+w/360);
+  return{sr,ss,polar:false};
+}
+const CHALD=[8,3,9,1,6,5,2]; // Сатурн, Юпитер, Марс, Солнце, Венера, Меркурий, Луна
+function planetaryHour(dateISO,timeStr,lat,lon,tz){
+  const [y,m,d]=dateISO.split('-').map(Number);
+  const [hh,mm]=timeStr.split(':').map(Number);
+  const t=hh+mm/60;
+  const today=sunTimes(y,m,d,lat,lon,tz);
+  const dt=new Date(y,m-1,d,12);
+  let weekday=dt.getDay(), idx, len, part, ssr;
+  if(t>=today.sr&&t<today.ss){
+    len=(today.ss-today.sr)/12; idx=Math.floor((t-today.sr)/len); part='дневной'; ssr=today;
+  }else if(t>=today.ss){
+    const nx=addDays(dt,1),tm=sunTimes(nx.getFullYear(),nx.getMonth()+1,nx.getDate(),lat,lon,tz);
+    len=(24-today.ss+tm.sr)/12; idx=12+Math.floor((t-today.ss)/len); part='ночной'; ssr=today;
+  }else{
+    const pv=addDays(dt,-1),yd=sunTimes(pv.getFullYear(),pv.getMonth()+1,pv.getDate(),lat,lon,tz);
+    len=(24-yd.ss+today.sr)/12; idx=12+Math.floor((t+24-yd.ss)/len); weekday=pv.getDay(); part='ночной (сутки начинаются с восхода — счёт от предыдущего дня)'; ssr=today;
+  }
+  idx=Math.min(23,Math.max(0,idx));
+  const dayRuler=WD_PLANET[weekday];
+  const ruler=CHALD[(CHALD.indexOf(dayRuler)+idx)%7];
+  return{ruler,idx,part,weekday,dayRuler,sr:today.sr,ss:today.ss,polar:today.polar,hourLen:len};
+}
+const hm=h=>{let H=Math.floor(h),M=Math.round((h-H)*60);if(M===60){H++;M=0;}return`${pad(H%24)}:${pad(M)}`;};
+
+/* ================= cities ================= */
+const CITIES=[
+ ['Москва',55.756,37.617,3,'Europe/Moscow'],['Санкт-Петербург',59.939,30.316,3,'Europe/Moscow'],['Казань',55.796,49.106,3,'Europe/Moscow'],['Нижний Новгород',56.327,44.006,3,'Europe/Moscow'],
+ ['Самара',53.195,50.100,4,'Europe/Samara'],['Волгоград',48.708,44.514,3,'Europe/Volgograd'],['Ростов-на-Дону',47.222,39.720,3,'Europe/Moscow'],['Краснодар',45.035,38.975,3,'Europe/Moscow'],
+ ['Екатеринбург',56.838,60.605,5,'Asia/Yekaterinburg'],['Челябинск',55.160,61.403,5,'Asia/Yekaterinburg'],['Омск',54.989,73.368,6,'Asia/Omsk'],['Новосибирск',55.030,82.920,7,'Asia/Novosibirsk'],
+ ['Красноярск',56.015,92.893,7,'Asia/Krasnoyarsk'],['Иркутск',52.287,104.305,8,'Asia/Irkutsk'],['Хабаровск',48.480,135.072,10,'Asia/Vladivostok'],['Владивосток',43.115,131.885,10,'Asia/Vladivostok'],
+ ['Калининград',54.710,20.511,2,'Europe/Kaliningrad'],['Харьков',49.994,36.231,2,'Europe/Kyiv'],['Минск',53.904,27.562,3,'Europe/Minsk'],['Киев',50.450,30.524,2,'Europe/Kyiv'],['Рига',56.949,24.105,2,'Europe/Riga'],
+ ['Алматы',43.238,76.889,5,'Asia/Almaty'],['Астана',51.169,71.449,5,'Asia/Almaty'],['Ташкент',41.311,69.240,5,'Asia/Tashkent'],['Бишкек',42.875,74.570,6,'Asia/Bishkek'],['Баку',40.409,49.867,4,'Asia/Baku'],['Тбилиси',41.716,44.783,4,'Asia/Tbilisi'],['Ереван',40.179,44.499,4,'Asia/Yerevan'],
+ ['Амстердам',52.370,4.895,1,'Europe/Amsterdam'],['Берлин',52.520,13.405,1,'Europe/Berlin'],['Прага',50.075,14.438,1,'Europe/Prague'],['Варшава',52.230,21.012,1,'Europe/Warsaw'],['Париж',48.857,2.352,1,'Europe/Paris'],['Лондон',51.507,-0.128,0,'Europe/London'],
+ ['Стамбул',41.008,28.978,3,'Europe/Istanbul'],['Тель-Авив',32.085,34.782,2,'Asia/Jerusalem'],['Дубай',25.205,55.271,4,'Asia/Dubai'],['Нью-Йорк',40.713,-74.006,-5,'America/New_York'],['Лос-Анджелес',34.052,-118.244,-8,'America/Los_Angeles'],
+ ['Другое (ввести вручную)',null,null,null,null]
+];
+const CITY_OLD=CITIES.map(c=>c[0]);
+CITIES.sort((a,b)=>a[1]==null?1:b[1]==null?-1:a[0].localeCompare(b[0],'ru'));
+const cityBy=v=>CITIES.find(c=>c[0]===v)||(/^\d+$/.test(String(v))?CITIES.find(c=>c[0]===CITY_OLD[+v]):null)||null;
+const cityVal=v=>{const c=cityBy(v);return c?c[0]:'Москва';};
+/* ================= time zones (IANA via built-in Intl, offline) ================= */
+const TZ_OK=(()=>{try{new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Moscow'});return true;}catch(e){return false;}})();
+const ZONES=(()=>{let z=[];try{z=Intl.supportedValuesOf('timeZone');}catch(e){}const own=CITIES.map(c=>c[4]).filter(Boolean);return[...new Set([...own,...z])].sort();})();
+const _fmtCache={};
+function zoneOffsetAtUTC(zone,ms){
+  const f=_fmtCache[zone]||(_fmtCache[zone]=new Intl.DateTimeFormat('en-US',{timeZone:zone,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+  const o={};f.formatToParts(new Date(ms)).forEach(x=>o[x.type]=x.value);
+  const asUTC=Date.UTC(+o.year,+o.month-1,+o.day,(+o.hour)%24,+o.minute,+o.second);
+  return(asUTC-ms)/3600000;
+}
+function zoneOffsetLocal(zone,dateISO,timeStr){
+  const [y,m,d]=dateISO.split('-').map(Number);const [hh,mm]=(timeStr||'12:00').split(':').map(Number);
+  const wall=Date.UTC(y,m-1,d,hh||0,mm||0);let off=zoneOffsetAtUTC(zone,wall);off=zoneOffsetAtUTC(zone,wall-off*3600000);
+  return Math.round(off*100)/100;
+}
+const fmtOff=o=>{const sg=o<0?'−':'+',a=Math.abs(o),h=Math.floor(a),m=Math.round((a-h)*60);return`UTC${sg}${h}${m?':'+pad(m):''}`;};
+const nearestCity=(lat,lon)=>{let best=null,bd=1e9;CITIES.forEach(c=>{if(c[1]==null||!c[4])return;const dl=(c[1]-lat)*Math.PI/180,dn=(c[2]-lon)*Math.PI/180;const a=Math.sin(dl/2)**2+Math.cos(lat*Math.PI/180)*Math.cos(c[1]*Math.PI/180)*Math.sin(dn/2)**2;const d=12742*Math.asin(Math.sqrt(a));if(d<bd){bd=d;best=c;}});return best?{c:best,d:Math.round(bd)}:null;};
+function detectTz(){
+  const date=$('#pDate').value;if(!date){$('#tzHint').textContent='Сначала укажите дату рождения.';return;}
+  if(!TZ_OK){$('#tzHint').textContent='Это устройство не поддерживает базу часовых поясов — укажите смещение UTC вручную.';return;}
+  const c=cityBy($('#pCity').value);let note='';
+  if(c&&c[4]){$('#pZone').value=c[4];note=`Город: ${c[0]}. `;}
+  else{const lat=parseFloat($('#pLat').value),lon=parseFloat($('#pLon').value);
+    if(isNaN(lat)||isNaN(lon)){$('#tzHint').textContent='Для своего места укажите широту и долготу или выберите часовой пояс вручную.';return;}
+    const n=nearestCity(lat,lon);if(n){$('#pZone').value=n.c[4];note=`Ближайший город из списка: ${n.c[0]} (≈${n.d} км) — проверьте, что пояс совпадает. `;}}
+  $('#pAutoTz').checked=true;renderProfile();lastDays=[];lastTravel=null;renderPeople();
+  $('#tzHint').textContent=note+$('#tzHint').textContent;
+}
+function applyAutoTz(){
+  const auto=$('#pAutoTz').checked&&TZ_OK,zone=$('#pZone').value,date=$('#pDate').value;
+  $('#pTz').readOnly=auto&&!!zone;$('#pZone').disabled=!$('#pAutoTz').checked;
+  if(!TZ_OK){$('#tzHint').textContent='Браузер не поддерживает базу часовых поясов — укажите смещение UTC вручную.';return;}
+  if(!auto||!zone||!date){$('#tzHint').textContent='Смещение UTC указывайте на момент рождения, с учётом летнего и декретного времени.';return;}
+  try{
+    const t=$('#pNoTime').checked?'12:00':$('#pTime').value;const off=zoneOffsetLocal(zone,date,t);
+    const [y]=date.split('-').map(Number);const jan=zoneOffsetLocal(zone,y+'-01-15','12:00'),jul=zoneOffsetLocal(zone,y+'-07-15','12:00');
+    $('#pTz').value=off;
+    const dst=jan!==jul?(off===Math.max(jan,jul)?' — действовало летнее время':' — зимнее (стандартное) время'):'';
+    $('#tzHint').textContent=`На момент рождения: ${fmtOff(off)} (${zone})${dst}.`;
+  }catch(e){$('#tzHint').textContent='Не удалось определить смещение для этого пояса — укажите вручную.';}
+}
+
+/* ================= profile ================= */
+let P=null, lastDays=[], lastPhoneList=[], lastTravel=null, PEOPLE=[];
+function buildProfile(){
+  const date=$('#pDate').value; if(!date)return null;
+  applyAutoTz();
+  const [Y,M,D]=date.split('-').map(Number);
+  const dd=pad(D),mm=pad(M),yyyy=String(Y);
+  const CS=red(D), sumAll=dsum(dd+mm+yyyy), MS=red(sumAll);
+  const noTime=$('#pNoTime').checked, time=$('#pTime').value;
+  const lat=parseFloat($('#pLat').value), lon=parseFloat($('#pLon').value), tz=parseFloat($('#pTz').value);
+  // matrix
+  const src=[]; // {d, from}
+  (dd+mm+yyyy).split('').forEach((c,i)=>{if(c!=='0')src.push({d:+c,from:i<2?'день':i<4?'месяц':'год'});});
+  const optCS=$('#optCS').value;
+  if(optCS==='always'||(optCS==='two'&&D>=10))src.push({d:CS,from:'ЧС'});
+  if($('#optMS').checked)src.push({d:MS,from:'ЧМ'});
+  if($('#optTime').checked&&!noTime&&time)time.replace(':','').split('').forEach(c=>{if(c!=='0')src.push({d:+c,from:'время'});});
+  const cnt={};for(let i=1;i<=9;i++)cnt[i]=0;src.forEach(s=>cnt[s.d]++);
+  const missing=Object.keys(cnt).map(Number).filter(k=>!cnt[k]);
+  // finance code
+  const fc=[red(D),red(M),red(dsum(yyyy))];fc.push(red(fc[0]+fc[1]+fc[2]));
+  // character
+  let ch=null;
+  if(!noTime&&time&&isFinite(lat)&&isFinite(lon)&&isFinite(tz))ch=planetaryHour(date,time,lat,lon,tz);
+  const timeNum=(!noTime&&time)?red(dsum(time)):null;
+  // personal year now
+  const now=new Date();const PY=red(D+M+dsum(now.getFullYear()));
+  const age=now.getFullYear()-Y-((now.getMonth()+1<M||(now.getMonth()+1===M&&now.getDate()<D))?1:0);
+  return{name:$('#pName').value.trim(),date,Y,M,D,dd,mm,yyyy,CS,MS,sumAll,src,cnt,missing,fc,ch,timeNum,time,noTime,PY,age};
+}
+function levelCls(c){return c===0?'empty':c===1?'lvl1':c===2?'lvl2':'lvl3';}
+const GRID=[3,6,9,2,5,8,1,4,7];
+function lineState(p,cells){const f=cells.filter(c=>p.cnt[c]>0).length;return f===cells.length?'full':f===0?'empty':'part';}
+function renderProfile(){
+  P=buildProfile(); if(!P){$('#profileOut').innerHTML='<div class="empty-state">Укажите дату рождения.</div>';return;}
+  saveState();
+  const p=P;
+  const chCard=p.ch?`<div class="kpi"><span class="lbl">Число характера</span><div class="val">${p.ch.ruler}</div><div class="sub">${PLANET[p.ch.ruler]} — управитель ${p.ch.idx+1}-го часа (${p.ch.part.split(' ')[0]})</div><div class="formula">восход ${hm(p.ch.sr)}, закат ${hm(p.ch.ss)}${p.ch.polar?' (полярный день/ночь — приближение)':''}; день недели: ${WD[p.ch.weekday]} (${PLANET[p.ch.dayRuler]})</div></div>`
+    :`<div class="kpi"><span class="lbl">Число характера</span><div class="val" style="color:var(--faint)">—</div><div class="sub">Нужны время и место рождения</div></div>`;
+  const cells=GRID.map(g=>{const ds=p.src.filter(s=>s.d===g).map(()=>g).join('');const c=p.cnt[g];
+    return`<div class="cell ${levelCls(c)}" title="${esc(ENERGY[g].t)}: ${esc(ENERGY[g].k)}"><span class="c">${c||''}</span><div class="d">${ds||g}</div><div class="n">${g} · ${ENERGY[g].t}</div></div>`;}).join('');
+  const lines=[
+    {cells:[1,4,7],n:'Линия бесконечных денег 1·4·7',d:{full:'Все три энергии есть: решение, порядок и чутьё — «инструмент» денег собран.',part:'Линия неполная: недостающую сторону денег выстраивайте привычками.',empty:'Линия пустая: финансовый результат приходит через осознанные навыки, а не «сам».'}},
+    {cells:[4,5,8,7],n:'Бизнес-цепочка 4→5→8→7',d:{full:'Цели, коммуникация, труд и успех на месте — цепочка замкнута.',part:'Цепочка разорвана: начинайте с недостающего звена, иначе 7 (успех) не раскроется.',empty:'Цепочки нет: бизнес-навыки придётся нарабатывать последовательно, начиная с 4.'}},
+    {cells:[2,5,8],n:'Средняя линия 2·5·8',d:{full:'Психология, коммуникация и труд: умеете договариваться и доводить до результата.',part:'Взаимодействие с людьми требует осознанной настройки.',empty:'Сфера взаимодействия и действия — зона роста.'}},
+    {cells:[3,6,9],n:'Верхняя линия 3·6·9',d:{full:'Анализ, творчество и служение: сильная интеллектуально-творческая линия.',part:'Знание и творчество раскрыты частично.',empty:'Анализ, творчество и служение нужно нарабатывать.'}},
+    {cells:[1,5,9],n:'Диагональ 1·5·9',d:{full:'Воля, общение и энергия действия — яркая активная диагональ.',part:'Активность проявляется неравномерно.',empty:'Активная диагональ пуста — действуйте через партнёров и систему.'}},
+    {cells:[3,5,7],n:'Диагональ 3·5·7',d:{full:'Анализ, коммуникация и антикризисность — гибкий ум.',part:'Гибкость мышления раскрыта частично.',empty:'Гибкость и антикризисность — зона роста.'}}
+  ];
+  const lineHtml=lines.map(l=>{const s=lineState(p,l.cells);const b=s==='full'?'b-good':s==='part'?'b-mid':'b-bad';const bt=s==='full'?'заполнена':s==='part'?'частично':'пустая';
+    return`<li><b>${l.n}</b> <span class="badge ${b}">${bt}</span><br><span class="hint" style="font-size:var(--text-sm)">${l.d[s]}</span></li>`;}).join('');
+  const ego=(p.cnt[1]>0&&p.cnt[9]>0)?`<li><b>Программа доминирующего эго</b> <span class="badge ${p.cnt[1]+p.cnt[9]>=4?'b-bad':'b-mid'}">1×${p.cnt[1]} · 9×${p.cnt[9]}</span><br><span class="hint" style="font-size:var(--text-sm)">Заполнены 1 и 9${p.cnt[1]+p.cnt[9]>=4?' с повторами — выраженная':''}: склонность к лидерству, эгоизму, завышенной самооценке.</span></li>`:'';
+  const missHtml=p.missing.length?p.missing.map(m=>`<li><b>${m} — ${ENERGY[m].t}.</b> ${ENERGY[m].dev}</li>`).join(''):'<li>Все энергии 1–9 присутствуют.</li>';
+  const excess=Object.keys(p.cnt).map(Number).filter(k=>p.cnt[k]>=3);
+  const excHtml=excess.length?`<div class="note warn">Избыток энергии: ${excess.map(k=>`<b>${k}</b> (${ENERGY[k].t}, ×${p.cnt[k]}) — следить за минусом: ${ENERGY[k].minus.toLowerCase()}`).join('; ')}.</div>`:'';
+  const compound=p.D>9?`Составное число дня ${p.D}: оттенки ${String(p.D)[0]} и ${String(p.D)[1]} → ${p.CS}.`:'Однозначный день — «чистое» число сознания.';
+  const period=p.age<33?`Сейчас ${p.age} лет: сильнее звучит число сознания; миссия включается после ~33.`:`Сейчас ${p.age} лет: на первый план выходит миссия (${p.MS}).`;
+  $('#profileOut').innerHTML=`
+  <div class="grid g4">
+    <div class="kpi"><span class="lbl">Число сознания</span><div class="val">${p.CS}</div><div class="sub">${PLANET[p.CS]}</div><div class="formula">день ${p.D}: ${redSteps(p.D)}</div></div>
+    <div class="kpi"><span class="lbl">Число предназначения</span><div class="val">${p.MS}</div><div class="sub">Миссия: ${MS_TXT[p.MS].split('.')[0]}</div><div class="formula">${(p.dd+p.mm+p.yyyy).split('').join('+')} = ${redSteps(p.sumAll)}</div></div>
+    ${chCard}
+    <div class="kpi"><span class="lbl">PIN-код (финансовый код)</span><div class="val mono">${p.fc.join('')}</div><div class="sub">день·месяц·год·сумма</div><div class="formula">${p.D}→${p.fc[0]}, ${p.M}→${p.fc[1]}, ${p.yyyy}→${p.fc[2]}, ${p.fc[0]}+${p.fc[1]}+${p.fc[2]}→${p.fc[3]}</div></div>
+  </div>
+  <div class="grid g2 mt">
+    <div class="card">
+      <div class="split"><h2>Матрица${p.name?' — '+esc(p.name):''}</h2><span class="hint">${fmtD(parseISO(p.date))}${p.noTime?'':' · '+p.time}</span></div>
+      <div class="matrix">${cells}</div>
+      <p class="hint mt2">В матрице: ${p.src.map(s=>`${s.d}<sub>${s.from}</sub>`).join(' ')}. Ноль энергией не считается. Число в углу — количество.</p>
+    </div>
+    <div class="card">
+      <h2>Числа и значения</h2>
+      <p><b>Сознание ${p.CS} (${PLANET[p.CS]}).</b> ${CS_TXT[p.CS]}</p>
+      <p><b>Миссия ${p.MS}.</b> ${MS_TXT[p.MS]}</p>
+      ${p.ch?`<p><b>Характер ${p.ch.ruler}.</b> ${CHAR_TXT[p.ch.ruler]}</p>`:''}
+      <p class="hint" style="font-size:var(--text-sm)">${compound} ${period}</p>
+      <p class="hint" style="font-size:var(--text-sm)">Личный год ${new Date().getFullYear()}: <b>${p.PY}</b> — ${PY_TXT[p.PY]}. День планеты-покровителя: ${PLANET_DAY[p.CS]}.${p.timeNum?` Число времени рождения (сумма цифр ${p.time}): ${p.timeNum}.`:''}</p>
+    </div>
+  </div>
+  <div class="grid g2 mt">
+    <div class="card"><h2>Линии и программы</h2><ul class="list">${lineHtml}${ego}</ul></div>
+    <div class="card"><h2>Недостающие энергии</h2><ul class="list">${missHtml}</ul>${excHtml}</div>
+  </div>`;
+  renderPartners(); renderPin(); renderLegend();
+}
+
+/* ================= partners ================= */
+function renderPartners(){
+  if(!P)return;const cs=P.CS;
+  const groups={good:[],ok:[],hard:[],anti:[]};
+  for(let k=1;k<=9;k++){const c=pairClass(cs,k);groups[c.g].push({k,c});}
+  const item=o=>`<li><b>${o.k}</b> (${PLANET[o.k]}) <span class="badge ${o.c.c}">${o.c.t}</span> <span class="hint">он(а) → вы: ${RNAME[rel(o.k,cs)]}; вы → он(а): ${RNAME[rel(cs,o.k)]}</span><br><span class="hint" style="font-size:var(--text-sm)">Родившиеся ${daysOf(o.k).join(', ')} числа любого месяца</span></li>`;
+  const blk=(t,arr,cls)=>`<div class="card"><h2>${t}</h2>${arr.length?`<ul class="list">${arr.map(item).join('')}</ul>`:'<p class="hint">Нет</p>'}</div>`;
+  $('#partnersOut').innerHTML=`<div class="note">Ваше число сознания: <b>${cs}</b> (${PLANET[cs]}). Число миссии <b>${P.MS}</b>: лучше, если миссия партнёра — ${[...FR[P.MS],P.MS].sort().join(', ')}; сложнее — ${EN[P.MS].join(', ')}.</div>
+  <div class="grid g3">${blk('Подходящие партнёры',groups.good.concat(groups.ok.filter(o=>o.c.k==='S')))}${blk('Нейтральные',groups.ok.filter(o=>o.c.k!=='S'))}${blk('Сложные и антагонисты',groups.anti.concat(groups.hard))}</div>`;
+}
+function renderRelTable(){
+  let h='<div class="cmp"><div class="h"></div>';for(let j=1;j<=9;j++)h+=`<div class="h">${j}</div>`;
+  for(let i=1;i<=9;i++){h+=`<div class="h">${i} ${PLANET[i]}</div>`;for(let j=1;j<=9;j++){const r=rel(i,j);const c=r==='F'?'b-good':r==='E'?'b-bad':r==='S'?'b-mid':'b-neu';h+=`<div class="${c}" title="${i}→${j}: ${RNAME[r]}">${r==='F'?'друг':r==='E'?'враг':r==='S'?'=':'·'}</div>`;}}
+  $('#relTable').innerHTML=h+'</div>';
+}
+function personFromDate(date){
+  const [Y,M,D]=date.split('-').map(Number);const dd=pad(D),mm=pad(M),yyyy=String(Y);
+  const CS=red(D),sumAll=dsum(dd+mm+yyyy),MS=red(sumAll);
+  const cnt={};for(let i=1;i<=9;i++)cnt[i]=0;(dd+mm+yyyy).split('').forEach(c=>{if(c!=='0')cnt[+c]++;});cnt[CS]++;cnt[MS]++;
+  return{CS,MS,cnt,missing:Object.keys(cnt).map(Number).filter(k=>!cnt[k]),D,M,Y};
+}
+function pairScore(A,B,type){
+  const vCS=pairVal(A.CS,B.CS),vMS=pairVal(A.MS,B.MS),vX=(pairVal(A.CS,B.MS)+pairVal(A.MS,B.CS))/2;
+  const aFill=A.missing.filter(m=>B.cnt[m]>0),bFill=B.missing.filter(m=>A.cnt[m]>0);
+  const totalMiss=A.missing.length+B.missing.length;
+  const vMat=totalMiss?((aFill.length+bFill.length)/totalMiss)*2-1:0.5;
+  const w=type==='biz'?{cs:.35,ms:.25,x:.15,m:.25}:{cs:.45,ms:.25,x:.15,m:.15};
+  const score=Math.round(((vCS*w.cs+vMS*w.ms+vX*w.x+vMat*w.m)+1)*50);
+  return{vCS,vMS,vX,aFill,bFill,totalMiss,vMat,score};
+}
+const heatCls=s=>s>=70?'b-good':s>=55?'b-good':s>=42?'b-mid':'b-bad';
+let lastGroup=null;
+function groupMembers(){
+  const m=[];if(P)m.push({name:P.name||'Вы (текущий)',date:P.date,A:P});
+  PEOPLE.forEach(p=>{if(P&&p.date===P.date&&(p.name===P.name||!P.name))return;m.push({name:p.name,date:p.date,A:personFromDate(p.date)});});
+  return m;
+}
+function renderGroup(){
+  const mem=groupMembers(),type=$('#grpType').value;
+  if(mem.length<2){lastGroup=null;$('#groupOut').innerHTML='<div class="empty-state">Сохраните хотя бы один профиль во вкладке «Матрица судьбы» — здесь появится таблица совместимости группы.</div>';return;}
+  const n=mem.length,M=[];for(let i=0;i<n;i++){M[i]=[];for(let j=0;j<n;j++)M[i][j]=i===j?null:pairScore(mem[i].A,mem[j].A,type).score;}
+  const avg=mem.map((_,i)=>Math.round(M[i].filter(v=>v!=null).reduce((a,b)=>a+b,0)/(n-1)));
+  const pairs=[];for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)pairs.push({i,j,s:M[i][j]});pairs.sort((a,b)=>b.s-a.s);
+  lastGroup={mem,M,avg,type};
+  const nm=i=>esc(mem[i].name);
+  const head=`<tr><th></th>${mem.map((m,i)=>`<th title="${esc(m.name)}">${i+1}</th>`).join('')}<th>Среднее</th></tr>`;
+  const body=mem.map((m,i)=>`<tr><th class="rowh">${i+1}. ${nm(i)} <span class="hint">ЧС ${m.A.CS} · ЧМ ${m.A.MS}</span></th>${M[i].map((v,j)=>v==null?'<td class="self">—</td>':`<td class="${heatCls(v)}" title="${nm(i)} ↔ ${nm(j)}: ${v}%">${v}</td>`).join('')}<td class="${heatCls(avg[i])}"><b>${avg[i]}</b></td></tr>`).join('');
+  const pl=a=>a.map(p=>`<li>${nm(p.i)} ↔ ${nm(p.j)} — <b>${p.s}%</b> <span class="badge ${heatCls(p.s)}">${pairClass(mem[p.i].A.CS,mem[p.j].A.CS).t}</span></li>`).join('');
+  const k=Math.min(3,Math.ceil(pairs.length/2));
+  const cover={};for(let d=1;d<=9;d++)cover[d]=mem.some(m=>m.A.cnt[d]>0);const gMiss=Object.keys(cover).filter(d=>!cover[d]);
+  $('#groupOut').innerHTML=`<div class="tbl-wrap" style="max-height:none"><table class="heat">${head}${body}</table></div>
+  <div class="grid g2 mt2"><div><h3>Самые лёгкие пары</h3><ul class="list">${pl(pairs.slice(0,k))}</ul></div><div><h3>Требуют внимания</h3><ul class="list">${pl(pairs.slice(-k).reverse())}</ul></div></div>
+  <p class="mt2" style="font-size:var(--text-sm)">${gMiss.length?`Общая матрица группы не закрывает энергии: <b>${gMiss.join(', ')}</b> (${gMiss.map(d=>ENERGY[d].t).join(', ')}). Их может дать новый участник.`:'Вместе группа закрывает все девять энергий матрицы.'}</p>`;
+}
+function renderPair(){
+  if(!P)return;const bd=$('#bDate').value;if(!bd)return;
+  const A=P,B=personFromDate(bd),type=$('#pairType').value,bn=esc($('#bName').value.trim()||'Партнёр');
+  const {vCS,vMS,vX,aFill,bFill,totalMiss,vMat,score}=pairScore(A,B,type);
+  const verdict=score>=70?['Высокая совместимость','b-good']:score>=55?['Хорошая совместимость','b-good']:score>=42?['Средняя, требует работы','b-mid']:['Сложная пара','b-bad'];
+  const c1=pairClass(A.CS,B.CS),c2=pairClass(A.MS,B.MS);
+  const bothMoney=[1,4,7].filter(k=>A.cnt[k]||B.cnt[k]);
+  const notes=[];
+  if(A.CS===B.CS&&[1,5,9].includes(A.CS))notes.push('Одинаковые активные числа сознания: оба хотят вести — договоритесь о зонах ответственности.');
+  if(c1.k==='EE')notes.push('Числа сознания — антагонисты: разные «векторы эго». В бизнесе помогает разделение потоков и третий участник с дружественным обоим числом.');
+  if(c1.k==='EF')notes.push('Связь односторонняя: один тянется, другой сопротивляется — важно проговаривать ожидания.');
+  if(type==='love'&&[1,4,5,8].includes(A.MS)&&[1,4,5,8].includes(B.MS))notes.push('Обе миссии из «жёсткой» группы 1·4·5·8 — в браке повышен риск борьбы за лидерство.');
+  if(aFill.length)notes.push(`${bn} даёт вам недостающие энергии: ${aFill.map(m=>m+' ('+ENERGY[m].t+')').join(', ')}.`);
+  if(bFill.length)notes.push(`Вы даёте партнёру: ${bFill.map(m=>m+' ('+ENERGY[m].t+')').join(', ')}.`);
+  if(bothMoney.length===3)notes.push('Вместе пара закрывает линию бесконечных денег 1·4·7.');
+  const third=[];for(let k=1;k<=9;k++){if(pairClass(A.CS,k).g==='good'&&pairClass(B.CS,k).g==='good')third.push(k);}
+  if(c1.g!=='good'&&third.length)notes.push(`Гармонизирующее число для третьего участника / даты событий: ${third.join(', ')}.`);
+  $('#pairOut').innerHTML=`<div class="card">
+   <div class="split"><h2>Вы и ${bn}</h2><span class="badge ${verdict[1]}">${verdict[0]}</span></div>
+   <div class="split"><span class="score-big">${score}%</span><span class="hint">ЧС ${A.CS}+${B.CS} · ЧМ ${A.MS}+${B.MS}</span></div>
+   <div class="meter mt2"><i style="width:${score}%"></i></div>
+   <table class="mt"><thead><tr><th>Критерий</th><th>Пара</th><th>Оценка</th></tr></thead><tbody>
+    <tr><td>Числа сознания</td><td class="mono">${A.CS} (${PLANET[A.CS]}) ↔ ${B.CS} (${PLANET[B.CS]})</td><td><span class="badge ${c1.c}">${c1.t}</span></td></tr>
+    <tr><td>Числа миссии</td><td class="mono">${A.MS} ↔ ${B.MS}</td><td><span class="badge ${c2.c}">${c2.t}</span></td></tr>
+    <tr><td>Перекрёстно ЧС↔ЧМ</td><td class="mono">${A.CS}↔${B.MS}, ${A.MS}↔${B.CS}</td><td>${Math.round((vX+1)*50)}%</td></tr>
+    <tr><td>Дополнение матриц</td><td>${aFill.length+bFill.length} из ${totalMiss} недостающих</td><td>${Math.round((vMat+1)*50)}%</td></tr>
+   </tbody></table>
+   <ul class="list mt2">${notes.map(n=>`<li>${n}</li>`).join('')||'<li>Особых сигналов нет.</li>'}</ul></div>`;
+  saveState();
+}
+
+/* ================= phone ================= */
+function phoneDigits(s,noCC){
+  let raw=String(s).trim();let d=raw.replace(/\D/g,'');
+  if(noCC){
+    if(raw.startsWith('+')){const cc=[/^7/,/^380/,/^375/,/^31/,/^49/,/^44/,/^1/,/^972/,/^998/,/^77/];
+      if(/^77/.test(d)||/^7/.test(d))d=d.slice(1);else if(/^(380|375|972|998)/.test(d))d=d.slice(3);else if(/^(31|49|44|33|39|34|48|90)/.test(d))d=d.slice(2);else if(/^1/.test(d))d=d.slice(1);}
+    else if(d.length===11&&(d[0]==='8'||d[0]==='7'))d=d.slice(1);
+  }
+  return d;
+}
+function scoreNumber(d,p){
+  if(!d||!/[1-9]/.test(d))return null;
+  const n=red(dsum(d));
+  const rc=rel(p.CS,n),rm=rel(p.MS,n);
+  let s=50+RV[rc]*25+RV[rm]*10;
+  const cover=p.missing.filter(m=>d.includes(String(m)));s+=Math.min(12,cover.length*3);
+  const fcs=p.fc.join(''),hasFC=d.includes(fcs);if(hasFC)s+=10;
+  const enemy=d.split('').filter(c=>c!=='0'&&EN[p.CS].includes(+c)).length;s-=Math.round(enemy/d.length*20);
+  const zeros=(d.match(/0/g)||[]).length;if(zeros/d.length>0.4)s-=5;
+  if(/(\d)\1\1\1/.test(d))s-=3;
+  s=Math.max(0,Math.min(100,Math.round(s)));
+  const last4=d.slice(-4),n4=red(dsum(last4))||0;
+  return{d,n,rc,rm,cover,hasFC,enemy,s,n4};
+}
+const verdictNum=s=>s>=70?['Благоприятный','b-good']:s>=50?['Нейтральный','b-mid']:['Неблагоприятный','b-bad'];
+function phoneReport(r){
+  const v=verdictNum(r.s);
+  return`<div class="card flat"><div class="split"><span class="score-big">${r.s}</span><span class="badge ${v[1]}">${v[0]}</span></div><div class="meter mt2"><i style="width:${r.s}%"></i></div>
+  <ul class="list mt2"><li>Число номера: <b>${r.n}</b> (${PLANET[r.n]}) — к вашему ЧС ${P.CS}: ${RNAME[r.rc]}, к ЧМ ${P.MS}: ${RNAME[r.rm]}</li>
+  <li>Число последних 4 цифр: ${r.n4||'—'}</li>
+  <li>Восполняет недостающие энергии: ${r.cover.length?r.cover.join(', '):'нет'}</li>
+  <li>Финансовый код ${P.fc.join('')}: ${r.hasFC?'<b>есть в номере</b>':'нет'}</li>
+  <li>Цифр-антагонистов ЧС (${EN[P.CS].join(', ')}): ${r.enemy}</li></ul></div>`;
+}
+function checkPhone(){
+  if(!P)return;const d=phoneDigits($('#phOne').value,$('#phNoCC').checked);const r=scoreNumber(d,P);
+  $('#phOneOut').innerHTML=r?`<p class="hint">Учтены цифры: <span class="mono">${d}</span></p>`+phoneReport(r):'<div class="empty-state">Введите номер.</div>';
+}
+function genPhone(){
+  if(!P)return;const pre=$('#phPrefix').value.replace(/\D/g,'');const L=Math.max(5,Math.min(15,+$('#phLen').value||11));
+  const k=L-pre.length;if(k<2){$('#phGenOut').innerHTML='<p class="hint">Фиксированная часть слишком длинная.</p>';return;}
+  const preEval=phoneDigits('+'+pre,true); // strip CC for scoring
+  const seen=new Set(),res=[];
+  const fcs=P.fc.join('');
+  for(let i=0;i<30000&&res.length<4000;i++){
+    let s='';for(let j=0;j<k;j++)s+=Math.floor(Math.random()*10);
+    if(i%3===0&&k>=fcs.length+1){const pos=Math.floor(Math.random()*(k-fcs.length+1));s=s.slice(0,pos)+fcs+s.slice(pos+fcs.length);s=s.slice(0,k);}
+    if(/(\d)\1\1/.test(s)||seen.has(s))continue;seen.add(s);
+    const r=scoreNumber(preEval+s,P);if(r)res.push({suffix:s,r});
+  }
+  const uniq=x=>new Set(x.suffix).size;
+  res.sort((a,b)=>b.r.s-a.r.s||(b.r.hasFC-a.r.hasFC)||(b.r.cover.length-a.r.cover.length)||(uniq(b)-uniq(a)));
+  const perN={},top=[];let nFC=0;for(const t of res){if(top.length>=16)break;if(t.r.hasFC&&nFC>=8)continue;if((perN[t.r.n]||0)>=6)continue;perN[t.r.n]=(perN[t.r.n]||0)+1;if(t.r.hasFC)nFC++;top.push(t);}
+  $('#phGenOut').innerHTML=`<p class="hint">Лучшие окончания (оценка / итоговое число${top.some(t=>t.r.hasFC)?'; <b>*</b> — содержит финансовый код':''}). Нажмите, чтобы проверить; повторное нажатие «Подобрать» даёт новые варианты.</p><div class="pills">${top.map(t=>`<button class="pill" data-ph="+${pre}${t.suffix}">…${t.suffix}${t.r.hasFC?'*':''} <span class="hint">${t.r.s}/${t.r.n}</span></button>`).join('')}</div>`;
+  $('#phGenOut').querySelectorAll('.pill').forEach(b=>b.onclick=()=>{$('#phOne').value=b.dataset.ph;$('#phNoCC').checked=true;checkPhone();});
+}
+function listPhones(){
+  if(!P)return;const lines=$('#phList').value.split(/\n/).map(s=>s.trim()).filter(Boolean);
+  lastPhoneList=lines.map(l=>({l,r:scoreNumber(phoneDigits(l,$('#phNoCC').checked),P)})).filter(x=>x.r).sort((a,b)=>b.r.s-a.r.s);
+  if(!lastPhoneList.length){$('#phListOut').innerHTML='<div class="empty-state">Список пуст.</div>';return;}
+  $('#phListOut').innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Номер</th><th class="num">Оценка</th><th class="num">Число</th><th>Отношение к ЧС</th><th>Восполняет</th><th>Итог</th></tr></thead><tbody>${lastPhoneList.map((x,i)=>{const v=verdictNum(x.r.s);return`<tr><td>${i+1}</td><td class="mono">${esc(x.l)}</td><td class="num">${x.r.s}</td><td class="num">${x.r.n}</td><td>${RNAME[x.r.rc]}</td><td>${x.r.cover.join(', ')||'—'}</td><td><span class="badge ${v[1]}">${v[0]}</span></td></tr>`;}).join('')}</tbody></table></div>`;
+}
+
+/* ================= PIN ================= */
+function pinSecurity(pin,p){
+  const f=[];
+  if(/^(\d)\1+$/.test(pin))f.push('одинаковые цифры');
+  const asc='01234567890',desc='09876543210';if(asc.includes(pin)||desc.includes(pin))f.push('последовательность');
+  if(/(\d)\1\1/.test(pin))f.push('тройной повтор');
+  const cand=[p.dd+p.mm,p.mm+p.dd,p.yyyy,p.yyyy.slice(2)+p.mm,p.dd+p.mm+p.yyyy.slice(2)];
+  if(cand.some(c=>pin.includes(c)||c.includes(pin)&&pin.length>=4))f.push('содержит дату рождения');
+  if(pin===p.fc.join(''))f.push('выводится из даты рождения');
+  return f;
+}
+function pinScore(pin,p){
+  const n=red(dsum(pin));if(!n)return null;
+  const rc=rel(p.CS,n),rm=rel(p.MS,n);
+  let s=50+RV[rc]*30+RV[rm]*10;
+  const en=pin.split('').filter(c=>EN[p.CS].includes(+c)).length;s-=en*8;
+  const cover=p.missing.filter(m=>pin.includes(String(m)));s+=Math.min(10,cover.length*4);
+  return{n,rc,rm,en,cover,s:Math.max(0,Math.min(100,Math.round(s)))};
+}
+function renderPin(){
+  if(!P)return;const p=P,fc=p.fc.join(''),r=pinScore(fc,p);
+  $('#pinMain').innerHTML=`<h2>Ваш финансовый код</h2><div class="val mono" style="font-size:var(--text-xl);font-weight:750;color:var(--accent);letter-spacing:.12em">${fc}</div>
+  <div class="steps mt2">день ${p.D} → ${p.fc[0]}
+месяц ${p.M} → ${p.fc[1]}
+год ${p.yyyy} → ${redSteps(dsum(p.yyyy))} → ${p.fc[2]}
+${p.fc[0]}+${p.fc[1]}+${p.fc[2]} = ${redSteps(p.fc[0]+p.fc[1]+p.fc[2])}</div>
+  <p class="mt2">Итоговое число кода: <b>${r.n}</b> — к ЧС ${p.CS}: ${RNAME[r.rc]}. В Сюцай код рекомендуют использовать в PIN-кодах, паролях, логинах, номере телефона.</p>
+  <div class="note warn">Финансовый код выводится из даты рождения, а её легко узнать. Для банковских карт надёжнее выбрать альтернативный PIN ниже — с той же энергией, но без связи с датой.</div>`;
+  genPins();
+}
+function genPins(){
+  if(!P)return;const p=P,good=[p.CS,...FR[p.CS]];const out=[];
+  for(let i=0;i<10000;i++){const pin=String(i).padStart(4,'0');const n=red(dsum(pin));if(!n||!good.includes(n))continue;
+    if(pin.split('').some(c=>EN[p.CS].includes(+c)))continue;if(pinSecurity(pin,p).length)continue;if(/(\d)\1/.test(pin))continue;
+    const r=pinScore(pin,p);out.push({pin,r});}
+  out.sort((a,b)=>b.r.s-a.r.s);const top=out.filter(o=>o.r.s>=out[0].r.s-8);
+  for(let i=top.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[top[i],top[j]]=[top[j],top[i]];}
+  $('#pinGenOut').innerHTML=top.slice(0,18).map(o=>`<button class="pill" data-pin="${o.pin}">${o.pin} <span class="hint">→${o.r.n}</span></button>`).join('');
+  $('#pinGenOut').querySelectorAll('.pill').forEach(b=>b.onclick=()=>{$('#pinIn').value=b.dataset.pin;checkPin();});
+}
+function checkPin(){
+  if(!P)return;const pin=$('#pinIn').value.replace(/\D/g,'');if(pin.length<4){$('#pinCheckOut').innerHTML='<p class="hint">Нужно 4–6 цифр.</p>';return;}
+  const r=pinScore(pin,P);if(!r){$('#pinCheckOut').innerHTML='<p class="hint">PIN из одних нулей не оценивается.</p>';return;}
+  const sec=pinSecurity(pin,P),v=verdictNum(r.s);
+  $('#pinCheckOut').innerHTML=`<div class="split"><span class="score-big">${r.s}</span><span class="badge ${v[1]}">${v[0]}</span></div><div class="meter mt2"><i style="width:${r.s}%"></i></div>
+  <ul class="list mt2"><li>Итоговое число: <b>${r.n}</b> (${PLANET[r.n]}) — к ЧС: ${RNAME[r.rc]}, к ЧМ: ${RNAME[r.rm]}</li><li>Цифр-антагонистов: ${r.en}</li><li>Восполняет: ${r.cover.join(', ')||'—'}</li>
+  <li>Безопасность: ${sec.length?`<span class="badge b-bad">${sec.join(', ')}</span>`:'<span class="badge b-good">без очевидных шаблонов</span>'}</li></ul>`;
+}
+
+/* ================= calendar ================= */
+const W_BIZ={1:2,2:1,3:2,4:-1,5:2,6:0,7:-2,8:2,9:-1};
+const W_REST={1:-1,2:1,3:0,4:0,5:1,6:2,7:2,8:-1,9:1};
+const W_TRV={1:1,2:0,3:2,4:-2,5:2,6:1,7:-2,8:-1,9:1};
+function dayInfo(d,p){
+  const PY=red(p.D+p.M+dsum(d.getFullYear()));
+  const PM=red(PY+d.getMonth()+1);
+  const PD=red(PM+d.getDate());
+  const OD=red(dsum(fmtD(d)));
+  const wp=WD_PLANET[d.getDay()];
+  const ro=RV[rel(p.CS,OD)], rw=RV[rel(p.CS,wp)];
+  const biz=W_BIZ[PD]+(ro>0?1:ro<0?-1:0)+(rw>0?.5:rw<0?-.5:0);
+  const rest=W_REST[PD]+(ro>0?.5:ro<0?-.5:0)+(rw>0?.5:rw<0?-.5:0);
+  const trv=W_TRV[PD]+(ro>0?1:ro<0?-1:0)+(rw>0?.5:rw<0?-.5:0)+([3,5].includes(PM)?.5:[4,7].includes(PM)?-.5:0);
+  return{d,PY,PM,PD,OD,wp,biz,rest,trv};
+}
+const rate=v=>v>=2.5?['благоприятно','b-good','good']:v<=-1?['неблагоприятно','b-bad','bad']:['нейтрально','b-neu','neu'];
+function renderLegend(){
+  $('#pdLegend').innerHTML=`<div class="grid g3">${Object.keys(PD_TXT).map(k=>`<div><b>${k} · ${PD_TXT[k].t}</b><br><span style="font-size:var(--text-sm)">${PD_TXT[k].d}</span><br><span class="hint">Избегать: ${PD_TXT[k].a}</span></div>`).join('')}</div>`;
+}
+function renderDays(){
+  if(!P)return;const st=$('#dStart').value?parseISO($('#dStart').value):new Date();const n=Math.max(7,Math.min(400,+$('#dCount').value||60));
+  lastDays=[];for(let i=0;i<n;i++)lastDays.push(dayInfo(addDays(st,i),P));
+  const f=$('#dFilter').value;
+  const rows=lastDays.filter(x=>f==='all'||(f==='biz'&&x.biz>=2.5)||(f==='rest'&&x.rest>=2.5)||(f==='bad'&&x.biz<=-1));
+  $('#daysTable').innerHTML=rows.length?`<table><thead><tr><th>Дата</th><th class="num">ЛГ</th><th class="num">ЛМ</th><th class="num">ЛД</th><th class="num">Общий</th><th>Дела</th><th>Отдых</th><th>Поездки</th><th>Подсказка</th></tr></thead><tbody>${rows.map(x=>{const a=rate(x.biz),b=rate(x.rest),c=rate(x.trv);const we=x.d.getDay()===0||x.d.getDay()===6;
+    return`<tr class="${we?'we':''}"><td class="mono">${fmtD(x.d)} ${WD[x.d.getDay()]}</td><td class="num">${x.PY}</td><td class="num">${x.PM}</td><td class="num"><b>${x.PD}</b></td><td class="num">${x.OD}</td><td><span class="badge ${a[1]}">${a[0]}</span></td><td><span class="badge ${b[1]}">${b[0]}</span></td><td><span class="badge ${c[1]}">${c[0]}</span></td><td style="font-size:var(--text-xs)">${PD_TXT[x.PD].t}: ${PD_TXT[x.PD].d}</td></tr>`;}).join('')}</tbody></table>`:'<div class="empty-state">Нет дней под выбранный фильтр.</div>';
+  const top=(key,cmp)=>[...lastDays].sort(cmp).slice(0,6);
+  const bestBiz=top('biz',(a,b)=>b.biz-a.biz||a.d-b.d),bestRest=top('rest',(a,b)=>b.rest-a.rest||a.d-b.d),worst=top('biz',(a,b)=>a.biz-b.biz||a.d-b.d);
+  const li=(arr,k)=>`<ul class="list">${arr.sort((a,b)=>a.d-b.d).map(x=>`<li class="mono">${fmtD(x.d)} ${WD[x.d.getDay()]} <span class="hint">ЛД ${x.PD} · ${PD_TXT[x.PD].t}</span></li>`).join('')}</ul>`;
+  $('#daysSummary').innerHTML=`<div class="card"><h2>Лучшие дни для дел</h2>${li(bestBiz)}</div><div class="card"><h2>Лучшие дни для отдыха</h2>${li(bestRest)}</div><div class="card"><h2>Дела лучше не начинать</h2>${li(worst)}</div>`;
+}
+function csvCell(v){v=String(v);return /[;"\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function downloadCSV(name,rows){const txt='\uFEFF'+rows.map(r=>r.map(csvCell).join(';')).join('\r\n');saveFile(name,txt,'text/csv');}
+function daysCSV(){if(!lastDays.length)renderDays();downloadCSV('suicai_kalendar.csv',[['Дата','День недели','Личный год','Личный месяц','Личный день','Общий день','Дела (балл)','Дела','Отдых (балл)','Отдых','Поездки (балл)','Поездки','Энергия дня','Рекомендовано','Избегать'],...lastDays.map(x=>[fmtD(x.d),WD[x.d.getDay()],x.PY,x.PM,x.PD,x.OD,String(x.biz).replace('.',','),rate(x.biz)[0],String(x.rest).replace('.',','),rate(x.rest)[0],String(x.trv).replace('.',','),rate(x.trv)[0],PD_TXT[x.PD].t,PD_TXT[x.PD].d,PD_TXT[x.PD].a])]);}
+
+/* ================= travel ================= */
+function renderTravel(){
+  if(!P)return;const st=$('#tStart').value?parseISO($('#tStart').value):new Date();const months=Math.max(1,Math.min(24,+$('#tMonths').value||12));
+  const end=new Date(st.getFullYear(),st.getMonth()+months,st.getDate(),12);
+  const days=[];for(let d=new Date(st);d<end;d=addDays(d,1))days.push(dayInfo(d,P));
+  // months
+  const byM={};days.forEach(x=>{const k=x.d.getFullYear()+'-'+x.d.getMonth();(byM[k]=byM[k]||[]).push(x);});
+  $('#tMonthsOut').innerHTML=Object.values(byM).map(arr=>{const avg=arr.reduce((a,x)=>a+x.trv,0)/arr.length;const g=arr.filter(x=>x.trv>=2.5).length,b=arr.filter(x=>x.trv<=-1).length;const pm=arr[0].PM;
+    const cls=(pm===5||pm===3||avg>=0.9)?'b-good':(pm===4||pm===7||avg<0.2)?'b-bad':'b-neu';
+    return`<div class="month"><b>${MONTHS[arr[0].d.getMonth()]} ${arr[0].d.getFullYear()}</b><span class="badge ${cls}">ЛМ ${pm} · ${cls==='b-good'?'хорошо':cls==='b-bad'?'осторожно':'средне'}</span>
+    <div class="strip mt2">${arr.map(x=>{const r=rate(x.trv)[2];return`<span title="${fmtD(x.d)}: ЛД ${x.PD}" style="width:5px;height:16px;background:${r==='good'?'var(--good)':r==='bad'?'var(--bad)':'var(--border-strong)'}"></span>`;}).join('')}</div>
+    <div class="hint mt2">${g} хор. · ${b} неблаг. дней</div></div>`;}).join('');
+  // periods
+  const seg=kind=>{const res=[];let cur=null;days.forEach(x=>{const r=rate(x.trv)[2];const ok=kind==='good'?r==='good':r==='bad';
+    if(ok){if(cur)cur.e=x;else cur={s:x,e:x,arr:[]};cur.arr.push(x);}else if(cur){res.push(cur);cur=null;}});if(cur)res.push(cur);return res;};
+  const goods=seg('good').filter(s=>s.arr.length>=2),bads=seg('bad').filter(s=>s.arr.length>=1);
+  lastTravel={goods,bads};
+  const fmtSeg=s=>`<li class="mono">${fmtD(s.s.d)}${s.arr.length>1?' – '+fmtD(s.e.d):''} <span class="hint">${s.arr.length} дн. · ЛД ${[...new Set(s.arr.map(x=>x.PD))].join(', ')}</span></li>`;
+  $('#tGood').innerHTML=goods.length?`<p class="hint">Отрезки от 2 дней подряд, удобные для отъезда и всей поездки.</p><ul class="list">${goods.map(fmtSeg).join('')}</ul>`:'<p class="hint">Нет отрезков от 2 дней — используйте одиночные благоприятные дни из календаря.</p>';
+  $('#tBad').innerHTML=bads.length?`<p class="hint">Не планируйте на эти даты отъезд, пересадки и возвращение.</p><ul class="list">${bads.map(fmtSeg).join('')}</ul>`:'<p class="hint">Неблагоприятных дней нет.</p>';
+  const py=red(P.D+P.M+dsum(st.getFullYear()));
+  if(py===5||py===3)$('#tGood').insertAdjacentHTML('afterbegin',`<div class="note">Личный год ${py} (${PY_TXT[py]}) сам по себе благоприятен для поездок.</div>`);
+  if(py===7||py===4)$('#tBad').insertAdjacentHTML('afterbegin',`<div class="note warn">Личный год ${py} (${PY_TXT[py]}): в дальних поездках закладывайте запас времени и страховку.</div>`);
+}
+function checkTrip(){
+  if(!P)return;const a=$('#tDep').value,b=$('#tRet').value;if(!a){$('#tripOut').innerHTML='<p class="hint">Укажите дату отъезда.</p>';return;}
+  const d1=parseISO(a),d2=b?parseISO(b):d1;if(d2<d1){$('#tripOut').innerHTML='<p class="hint">Возвращение раньше отъезда.</p>';return;}
+  const arr=[];for(let d=new Date(d1);d<=d2;d=addDays(d,1))arr.push(dayInfo(d,P));
+  const dep=arr[0],ret=arr[arr.length-1],avg=arr.reduce((s,x)=>s+x.trv,0)/arr.length;const bad=arr.filter(x=>x.trv<=-1);
+  const score=Math.round(Math.max(0,Math.min(100,50+dep.trv*9+ret.trv*5+avg*6)));const v=verdictNum(score);
+  // nearest better departure
+  let alt=[];for(let i=-7;i<=7;i++){if(!i)continue;const x=dayInfo(addDays(d1,i),P);if(x.trv>=2.5)alt.push(x);}
+  alt.sort((x,y)=>Math.abs(x.d-d1)-Math.abs(y.d-d1));
+  $('#tripOut').innerHTML=`<div class="split"><span class="score-big">${score}</span><span class="badge ${v[1]}">${v[0].replace('ый','ая')} поездка</span></div><div class="meter mt2"><i style="width:${score}%"></i></div>
+  <ul class="list mt2"><li>Отъезд ${fmtD(dep.d)}: ЛД ${dep.PD} (${PD_TXT[dep.PD].t}) — <span class="badge ${rate(dep.trv)[1]}">${rate(dep.trv)[0]}</span></li>
+  ${arr.length>1?`<li>Возвращение ${fmtD(ret.d)}: ЛД ${ret.PD} — <span class="badge ${rate(ret.trv)[1]}">${rate(ret.trv)[0]}</span></li>`:''}
+  <li>Неблагоприятных дней в поездке: ${bad.length}${bad.length?' ('+bad.map(x=>fmtD(x.d).slice(0,5)).join(', ')+')':''}</li>
+  ${rate(dep.trv)[2]!=='good'&&alt.length?`<li>Ближайшие благоприятные даты отъезда: ${alt.slice(0,4).map(x=>`<b class="mono">${fmtD(x.d)}</b>`).join(', ')}</li>`:''}</ul>`;
+  saveState();
+}
+
+/* ================= file saving: browser download or Android bridge ================= */
+function saveFile(name,text,mime){
+  if(window.SuicaiAndroid&&SuicaiAndroid.saveFile){SuicaiAndroid.saveFile(name,mime,text);return;}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:mime}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+}
+function backupAll(){
+  saveState();const ls={};['suicai-v1','suicai-theme',STORE_P].forEach(k=>{try{const v=MEM.getItem(k);if(v!=null)ls[k]=v;}catch(e){}});
+  const data={format:'suicai-backup',version:1,exported:new Date().toISOString(),state:JSON.parse(ls['suicai-v1']||'null'),theme:ls['suicai-theme']||null,profiles:PEOPLE};
+  saveFile('suicai_dannye_'+isoD(new Date())+'.json',JSON.stringify(data,null,2),'application/json');
+}
+function restoreAll(file){
+  const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);
+    if(o.format==='suicai-profiles'||Array.isArray(o)){importPeopleData(o);return;}
+    if(o.format!=='suicai-backup')throw 0;
+    if(!confirm('Заменить текущие введённые данные данными из копии? Сохранённые профили будут объединены.'))return;
+    if(o.state){try{MEM.setItem('suicai-v1',JSON.stringify(o.state));}catch(e){}loadState();$('#pTime').disabled=$('#pNoTime').checked;}
+    if(o.theme)setTheme(o.theme);
+    if(Array.isArray(o.profiles))importPeopleData({profiles:o.profiles},true);
+    lastDays=[];lastTravel=null;renderProfile();renderPeople();alert('Данные восстановлены из копии.');
+  }catch(e){alert('Файл не похож на резервную копию Сюцай.');}};r.readAsText(file,'utf-8');
+}
+
+/* ================= iCalendar export ================= */
+function icsEsc(v){return String(v).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');}
+const icsDate=d=>d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());
+function icsFold(line){const enc=new TextEncoder();const out=[];let cur='',len=0,lim=75;for(const ch of line){const b=enc.encode(ch).length;if(len+b>lim){out.push(cur);cur=' '+ch;len=1+b;lim=75;}else{cur+=ch;len+=b;}}out.push(cur);return out.join('\r\n');}
+function downloadICS(name,events,calName){
+  const stamp=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+  const L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Suicai calculator//RU','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+icsEsc(calName)];
+  events.forEach((e,i)=>{L.push('BEGIN:VEVENT','UID:'+icsDate(e.s)+'-'+i+'-'+Math.random().toString(36).slice(2,10)+'@suicai.local','DTSTAMP:'+stamp,'DTSTART;VALUE=DATE:'+icsDate(e.s),'DTEND;VALUE=DATE:'+icsDate(addDays(e.e||e.s,1)),'SUMMARY:'+icsEsc(e.t),'DESCRIPTION:'+icsEsc(e.d||''),'TRANSP:TRANSPARENT','END:VEVENT');});
+  L.push('END:VCALENDAR');
+  const txt=L.map(icsFold).join('\r\n')+'\r\n';
+  saveFile(name,txt,'text/calendar');
+}
+const who=()=>P&&P.name?' ('+P.name+')':'';
+function daysICS(){
+  if(!lastDays.length)renderDays();const f=$('#dFilter').value;
+  const pick=lastDays.filter(x=>f==='biz'?x.biz>=2.5:f==='rest'?x.rest>=2.5:f==='bad'?x.biz<=-1:(x.biz>=2.5||x.rest>=2.5||x.biz<=-1));
+  if(!pick.length){alert('Нет дней для выгрузки под выбранный фильтр.');return;}
+  const ev=pick.map(x=>{const tags=[];if(x.biz>=2.5)tags.push('дела +');if(x.biz<=-1)tags.push('дела −');if(x.rest>=2.5)tags.push('отдых +');if(x.trv>=2.5)tags.push('поездки +');if(x.trv<=-1)tags.push('поездки −');
+    return{s:x.d,t:`Сюцай: ${tags.join(', ')} · ЛД ${x.PD}`,d:`Личный день ${x.PD} — ${PD_TXT[x.PD].t}. Рекомендовано: ${PD_TXT[x.PD].d} Избегать: ${PD_TXT[x.PD].a} (ЛГ ${x.PY}, ЛМ ${x.PM}, общий день ${x.OD})`};});
+  downloadICS('suicai_dni.ics',ev,'Сюцай — дни'+who());
+}
+function travelICS(){
+  if(!lastTravel)renderTravel();const {goods,bads}=lastTravel;
+  const ev=[...goods.map(s=>({s:s.s.d,e:s.e.d,t:'Сюцай: благоприятно для поездок',d:`${s.arr.length} дн., личные дни ${[...new Set(s.arr.map(x=>x.PD))].join(', ')}. Удобно для отъезда и всей поездки.`})),
+    ...bads.map(s=>({s:s.s.d,e:s.e.d,t:'Сюцай: поездки нежелательны',d:`${s.arr.length} дн., личные дни ${[...new Set(s.arr.map(x=>x.PD))].join(', ')}. Не планируйте отъезд, пересадки и возвращение.`}))].sort((a,b)=>a.s-b.s);
+  if(!ev.length){alert('Периодов для выгрузки нет.');return;}
+  downloadICS('suicai_poezdki.ics',ev,'Сюцай — путешествия'+who());
+}
+
+/* ================= saved people ================= */
+const STORE_P='suicai-people-v1';
+function loadPeople(){try{const a=JSON.parse(MEM.getItem(STORE_P)||'[]');PEOPLE=Array.isArray(a)?a.filter(x=>x&&/^\d{4}-\d{2}-\d{2}$/.test(x.date)):[];}catch(e){PEOPLE=[];}}
+function savePeople(){try{MEM.setItem(STORE_P,JSON.stringify(PEOPLE));}catch(e){}}
+function currentForm(){return{name:$('#pName').value.trim(),date:$('#pDate').value,time:$('#pTime').value,noTime:$('#pNoTime').checked,city:$('#pCity').value,lat:$('#pLat').value,lon:$('#pLon').value,tz:$('#pTz').value,zone:$('#pZone').value,autoTz:$('#pAutoTz').checked};}
+const newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function saveCurrentPerson(){
+  const f=currentForm();if(!f.date)return;if(!f.name){f.name='Профиль '+fmtD(parseISO(f.date));$('#pName').value=f.name;}
+  const i=PEOPLE.findIndex(p=>p.name===f.name);f.id=i>=0?PEOPLE[i].id:newId();if(i>=0)PEOPLE[i]=f;else PEOPLE.push(f);
+  savePeople();renderProfile();renderPeople();
+}
+function loadPerson(id){
+  const f=PEOPLE.find(p=>p.id===id);if(!f)return;
+  $('#pName').value=f.name||'';$('#pDate').value=f.date;$('#pTime').value=f.time||'';$('#pNoTime').checked=!!f.noTime;
+  if(f.city!=null)$('#pCity').value=cityVal(f.city);$('#pLat').value=f.lat??'';$('#pLon').value=f.lon??'';
+  if(f.zone)$('#pZone').value=f.zone;$('#pAutoTz').checked=f.autoTz!==false;$('#pTz').value=f.tz??'';$('#pTime').disabled=!!f.noTime;
+  lastDays=[];lastTravel=null;renderProfile();renderPeople();
+}
+function renderPeople(){
+  const cur=P?PEOPLE.find(p=>p.date===P.date&&p.name===P.name):null;
+  $('#savedList').innerHTML=PEOPLE.length?PEOPLE.map(p=>`<span class="person${cur&&cur.id===p.id?' cur':''}"><button data-load="${esc(p.id)}" title="Загрузить профиль">${esc(p.name)} <span class="hint mono">${fmtD(parseISO(p.date))}</span></button><button class="del" data-del="${esc(p.id)}" aria-label="Удалить профиль ${esc(p.name)}">×</button></span>`).join(''):'<span class="hint">Пока нет сохранённых профилей.</span>';
+  $('#savedList').querySelectorAll('[data-load]').forEach(b=>b.onclick=()=>loadPerson(b.dataset.load));
+  $('#savedList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const p=PEOPLE.find(x=>x.id===b.dataset.del);if(p&&confirm('Удалить профиль «'+p.name+'»?')){PEOPLE=PEOPLE.filter(x=>x.id!==p.id);savePeople();renderPeople();}});
+  const sel=$('#bSaved'),v=sel.value;
+  sel.innerHTML='<option value="">— ввести вручную —</option>'+PEOPLE.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} · ${fmtD(parseISO(p.date))}</option>`).join('');
+  if(PEOPLE.some(p=>p.id===v))sel.value=v;
+  renderGroup();
+}
+function exportPeople(){
+  const data={format:'suicai-profiles',version:1,exported:new Date().toISOString(),profiles:PEOPLE};
+  saveFile('suicai_profili.json',JSON.stringify(data,null,2),'application/json');
+}
+function importPeopleData(o,silent){const arr=Array.isArray(o)?o:o.profiles;if(!Array.isArray(arr))throw 0;let add=0,upd=0;
+  arr.forEach(x=>{if(!x||!/^\d{4}-\d{2}-\d{2}$/.test(x.date))return;x.name=String(x.name||('Профиль '+x.date)).slice(0,80);if(x.city!=null)x.city=cityVal(x.city);const i=PEOPLE.findIndex(p=>p.name===x.name);if(i>=0){x.id=PEOPLE[i].id;PEOPLE[i]=x;upd++;}else{x.id=x.id||newId();PEOPLE.push(x);add++;}});
+  savePeople();renderPeople();if(!silent)alert(`Импорт завершён: добавлено ${add}, обновлено ${upd}.`);}
+function importPeople(file){
+  const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o&&o.format==='suicai-backup'){importPeopleData({profiles:o.profiles||[]});return;}importPeopleData(o);}catch(e){alert('Файл не похож на экспорт профилей Сюцай.');}};
+  r.readAsText(file,'utf-8');
+}
+function groupCSV(){
+  if(!lastGroup)renderGroup();if(!lastGroup){alert('Нужно минимум два профиля.');return;}
+  const {mem,M,avg}=lastGroup;
+  downloadCSV('suicai_gruppa.csv',[['Участник','Дата рождения','ЧС','ЧМ',...mem.map((m,i)=>(i+1)+'. '+m.name),'Среднее'],...mem.map((m,i)=>[(i+1)+'. '+m.name,fmtD(parseISO(m.date)),m.A.CS,m.A.MS,...M[i].map(v=>v==null?'—':v),avg[i]])]);
+}
+
+/* ================= state, theme, tabs ================= */
+const FIELDS=['pName','pDate','pTime','pLat','pLon','pTz','pZone','optCS','bName','bDate','pairType','phPrefix','phLen','tDep','tRet'];
+const CHECKS=['pNoTime','optMS','optTime','pAutoTz'];
+function saveState(){try{const o={city:$('#pCity').value};FIELDS.forEach(f=>o[f]=$('#'+f).value);CHECKS.forEach(c=>o[c]=$('#'+c).checked);MEM.setItem('suicai-v1',JSON.stringify(o));}catch(e){}}
+function loadState(){try{const o=JSON.parse(MEM.getItem('suicai-v1')||'null');if(!o)return false;FIELDS.forEach(f=>{if(o[f]!=null)$('#'+f).value=o[f];});CHECKS.forEach(c=>{if(o[c]!=null)$('#'+c).checked=o[c];});if(o.city!=null)$('#pCity').value=cityVal(o.city);return true;}catch(e){return false;}}
+function setTheme(t){document.documentElement.setAttribute('data-theme',t);$('#themeLbl').textContent=t==='light'?'Тёмная':'Светлая';try{MEM.setItem('suicai-theme',t);}catch(e){}try{if(window.SuicaiAndroid&&SuicaiAndroid.setTheme)SuicaiAndroid.setTheme(t);}catch(e){}}
+$('#themeBtn').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')==='light'?'dark':'light');
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav.tabs button').forEach(x=>x.setAttribute('aria-selected','false'));b.setAttribute('aria-selected','true');
+  document.querySelectorAll('section.panel').forEach(s=>s.classList.remove('active'));$('#tab-'+b.dataset.tab).classList.add('active');
+  if(!P)renderProfile();
+  const t=b.dataset.tab;if(t==='days'&&!lastDays.length)renderDays();if(t==='travel')renderTravel();if(t==='pair'){renderPair();renderGroup();}
+  window.scrollTo({top:0});
+});
+// city select
+$('#pCity').innerHTML=CITIES.map(c=>`<option value="${esc(c[0])}">${esc(c[0])}</option>`).join('');
+$('#pZone').innerHTML='<option value="">— не выбран —</option>'+ZONES.map(z=>`<option value="${z}">${z.replace(/_/g,' ')}</option>`).join('');
+$('#pCity').onchange=()=>{const c=cityBy($('#pCity').value);if(!c)return;if(c[1]!=null){$('#pLat').value=c[1];$('#pLon').value=c[2];$('#pTz').value=c[3];if(c[4])$('#pZone').value=c[4];}};
+$('#pNoTime').onchange=()=>{$('#pTime').disabled=$('#pNoTime').checked;};
+$('#calcBtn').onclick=()=>{renderProfile();lastDays=[];lastTravel=null;renderPeople();};
+$('#printBtn').onclick=()=>{if(window.SuicaiAndroid&&SuicaiAndroid.print)SuicaiAndroid.print();else window.print();};
+['pDate','pTime','optCS','optMS','optTime','pLat','pLon','pTz','pNoTime','pZone','pAutoTz','pCity'].forEach(id=>$('#'+id).addEventListener('change',()=>{renderProfile();lastDays=[];lastTravel=null;renderPeople();}));
+FIELDS.forEach(f=>{const el=$('#'+f);if(el)el.addEventListener('input',()=>saveState());});window.addEventListener('pagehide',saveState);document.addEventListener('visibilitychange',()=>{if(document.hidden)saveState();});
+$('#saveProfBtn').onclick=saveCurrentPerson;$('#tzBtn').onclick=detectTz;
+$('#backupBtn').onclick=backupAll;$('#impAll').onchange=e=>{const f=e.target.files[0];if(f)restoreAll(f);e.target.value='';};$('#expProfBtn').onclick=exportPeople;
+$('#impProf').onchange=e=>{const f=e.target.files[0];if(f)importPeople(f);e.target.value='';};
+$('#bSaved').onchange=()=>{const p=PEOPLE.find(x=>x.id===$('#bSaved').value);if(p){$('#bName').value=p.name;$('#bDate').value=p.date;renderPair();}};
+$('#grpType').onchange=renderGroup;$('#grpCsvBtn').onclick=groupCSV;
+$('#dIcsBtn').onclick=daysICS;$('#tIcsBtn').onclick=travelICS;
+$('#pairBtn').onclick=renderPair;
+$('#phCheckBtn').onclick=checkPhone;$('#phGenBtn').onclick=genPhone;$('#phListBtn').onclick=listPhones;
+$('#phCsvBtn').onclick=()=>{if(!lastPhoneList.length)listPhones();downloadCSV('suicai_nomera.csv',[['Номер','Оценка','Итоговое число','Отношение к ЧС','Отношение к ЧМ','Восполняет энергии','Финансовый код','Итог'],...lastPhoneList.map(x=>[x.l,x.r.s,x.r.n,RNAME[x.r.rc],RNAME[x.r.rm],x.r.cover.join(','),x.r.hasFC?'да':'нет',verdictNum(x.r.s)[0]])]);};
+$('#pinCheckBtn').onclick=checkPin;$('#pinGenBtn').onclick=genPins;
+$('#dBtn').onclick=renderDays;$('#dFilter').onchange=renderDays;$('#dCsvBtn').onclick=daysCSV;
+$('#tBtn').onclick=renderTravel;$('#tripBtn').onclick=checkTrip;
+// init
+(function init(){
+  let th='light';try{th=MEM.getItem('suicai-theme')||'light';}catch(e){}setTheme(th);
+  $('#pCity').value='Москва';$('#pCity').onchange();
+  const today=isoD(new Date());$('#dStart').value=today;$('#tStart').value=today;
+  $('#tDep').value=isoD(addDays(new Date(),14));$('#tRet').value=isoD(addDays(new Date(),21));
+  loadState();$('#pTime').disabled=$('#pNoTime').checked;
+  loadPeople();renderRelTable();renderProfile();renderPeople();
+})();
+</script>
+</body>
+</html>
