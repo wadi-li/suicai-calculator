@@ -13,8 +13,9 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          gh api "repos/$GH_REPO/contents/web/Suicai-1.3.apk?ref=0516c9b89f222c9a337c4bcf3cfbff00f982bbc5" \
-            -H "Accept: application/vnd.github.raw+json" > Suicai-1.3.apk
+          curl --fail --location --retry 2 \
+            "https://raw.githubusercontent.com/$GH_REPO/0516c9b89f222c9a337c4bcf3cfbff00f982bbc5/web/Suicai-1.3.apk" \
+            --output Suicai-1.3.apk
           echo "acc4ec7bb16d6b10e02d06ed650d080a06929b381786a683ba9b9a5e635b9953  Suicai-1.3.apk" | sha256sum --check
       - name: Attach the APK and publish the existing draft
         env:
